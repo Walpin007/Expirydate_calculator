@@ -42,8 +42,8 @@
       <section class="manual" aria-label="수동 시간 계산">
         <div class="head"><span>&gt; MANUAL INPUT / 직접 입력</span><span>KST</span></div>
         <div class="manual-grid">
-          <label class="field" for="manualDate"><span>기준 날짜</span><input id="manualDate" type="date" required></label>
-          <label class="field" for="manualTime"><span>기준 시각</span><input id="manualTime" type="time" step="60" required></label>
+          <label class="field" for="manualDate"><span>날짜 · DDMMMYYYY</span><input id="manualDate" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="기준 날짜, 예: 27SEP2026" required></label>
+          <label class="field" for="manualTime"><span>시각 · HHMM (24H)</span><input id="manualTime" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="예: 1530" aria-label="기준 시각, 24시간제 네 자리" required></label>
         </div>
         <div class="manual-row">
           <div class="signs" role="group" aria-label="더하기 또는 빼기">
@@ -60,7 +60,7 @@
         <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 브라우저 기능을 사용합니다.<span class="version">v0.1.3</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 브라우저 기능을 사용합니다.<span class="version">v0.1.4</span></footer>
   </div>
   <script>
   (() => {
@@ -78,21 +78,23 @@
     const banner=(name,value,sub='',cls='')=>`<div class="result ${cls}"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
     const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),manualResult=$('manualResult');
     const kstToday=new Date(Date.now()+9*3600000);
-    manualDate.value=`${kstToday.getUTCFullYear()}-${pad(kstToday.getUTCMonth()+1)}-${pad(kstToday.getUTCDate())}`;
+    manualDate.value=`${pad(kstToday.getUTCDate())}${MONTHS[kstToday.getUTCMonth()]}${kstToday.getUTCFullYear()}`;
     manualTime.value='';
     let manualSign=1,manualUnit=null;
     function renderManual(){
       if(!manualUnit){manualResult.innerHTML='<p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p>';return}
-      const date=/^(\d{4})-(\d{2})-(\d{2})$/.exec(manualDate.value);
-      const time=/^(\d{2}):(\d{2})$/.exec(manualTime.value);
+      const date=/^(\d{2})([A-Z]{3})(\d{4})$/.exec(manualDate.value.trim().toUpperCase());
+      const time=/^([01]\d|2[0-3])([0-5]\d)$/.exec(manualTime.value.trim());
       const amount=manualAmount.value.trim();
-      if(!date||!time||!amount){manualResult.innerHTML='<p class="manual-error">기준 날짜·시각과 계산할 숫자를 입력해 주세요.</p>';return}
+      if(!manualDate.value.trim()||!manualTime.value.trim()||!amount){manualResult.innerHTML='<p class="manual-error">기준 날짜·시각과 계산할 숫자를 입력해 주세요.</p>';return}
+      if(!date||!MONTHS.includes(date[2])){manualResult.innerHTML='<p class="manual-error">날짜는 27SEP2026처럼 DDMMMYYYY 형식으로 입력해 주세요.</p>';return}
+      if(!time){manualResult.innerHTML='<p class="manual-error">시각은 24시간제 네 자리로 입력해 주세요. 예: 1530</p>';return}
       if(!/^\d+$/.test(amount)||+amount<1){manualResult.innerHTML='<p class="manual-error">숫자는 1 이상의 정수로 입력해 주세요.</p>';return}
       const scale={minutes:1,hours:60,days:1440}[manualUnit];
       const minutes=Number(amount)*scale;
       if(!Number.isSafeInteger(minutes)||minutes>5256000){manualResult.innerHTML='<p class="manual-error">계산 기간은 최대 10년까지 입력해 주세요.</p>';return}
       try{
-        const start=kst(+date[1],+date[2],+date[3],+time[1],+time[2]);
+        const start=kst(+date[3],MONTHS.indexOf(date[2])+1,+date[1],+time[1],+time[2]);
         const result=start+manualSign*minutes*60000;
         const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
         manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amount}${unitLabel}`);
@@ -108,13 +110,15 @@
       document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
       renderManual();
     }));
-    [manualDate,manualTime,manualAmount].forEach(field=>{field.addEventListener('input',renderManual);field.addEventListener('change',renderManual)});
+    manualDate.addEventListener('input',()=>{manualDate.value=manualDate.value.toUpperCase();renderManual()});
+    [manualTime,manualAmount].forEach(field=>field.addEventListener('input',renderManual));
+    [manualDate,manualTime,manualAmount].forEach(field=>field.addEventListener('change',renderManual));
     function syncManualFromVoice(raw){
       const dates=parseDates(raw);
       const limit=parseDuration(raw,dates);
       const start=dates[0],local=new Date(start.ms+9*3600000);
-      manualDate.value=`${local.getUTCFullYear()}-${pad(local.getUTCMonth()+1)}-${pad(local.getUTCDate())}`;
-      manualTime.value=`${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}`;
+      manualDate.value=`${pad(local.getUTCDate())}${MONTHS[local.getUTCMonth()]}${local.getUTCFullYear()}`;
+      manualTime.value=`${pad(local.getUTCHours())}${pad(local.getUTCMinutes())}`;
       manualSign=1;
       document.querySelectorAll('[data-sign]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sign==='1')));
       if(dates.length!==1||limit===null){

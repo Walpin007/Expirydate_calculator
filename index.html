@@ -12,11 +12,12 @@
     button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
     .shell{width:min(100%,660px);min-height:100dvh;margin:auto;padding:calc(env(safe-area-inset-top) + 24px) 22px calc(env(safe-area-inset-bottom) + 26px);display:flex;flex-direction:column}
     .top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:.12em}.live{color:var(--green);font-weight:400}.live:before{content:"■ ";font-size:9px}
-    main{flex:1;display:flex;flex-direction:column;justify-content:center}.intro{text-align:center}.mic{display:grid;place-items:center;width:156px;height:156px;margin:0 auto 28px;border:2px solid var(--green);border-radius:22px;background:#16301c;color:var(--green);box-shadow:0 0 0 9px #a4ffa80c,0 0 52px #72e67c27;transition:transform .15s,background .2s}.mic:active{transform:scale(.96)}.mic svg{width:68px;height:68px;fill:currentColor;shape-rendering:crispEdges}.mic.listening{background:#275633;animation:pulse 1.2s infinite}@keyframes pulse{50%{box-shadow:0 0 0 17px #a4ffa81a,0 0 72px #72e67c55}}
+    main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-top:clamp(24px,5vh,52px)}.intro{text-align:center}.mic{display:grid;place-items:center;width:116px;height:116px;margin:0 auto 18px;border:2px solid var(--green);border-radius:20px;background:#16301c;color:var(--green);box-shadow:0 0 0 9px #a4ffa80c,0 0 52px #72e67c27;transition:transform .15s,background .2s}.mic:active{transform:scale(.96)}.mic svg{width:56px;height:56px;fill:currentColor;shape-rendering:crispEdges}.mic.listening{background:#275633;animation:pulse 1.2s infinite}@keyframes pulse{50%{box-shadow:0 0 0 17px #a4ffa81a,0 0 72px #72e67c55}}
     h1{font-size:clamp(22px,6vw,32px);font-weight:400;letter-spacing:.06em;margin:0 0 12px;color:var(--green)}.hint{font-size:14px;color:var(--muted);line-height:1.7;margin:0}.status{min-height:23px;margin:16px auto 0;color:var(--amber);font-size:13px;line-height:1.5}
     .terminal{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px 20px 24px;box-shadow:0 20px 60px #0007}.head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px;font-size:12px;letter-spacing:.07em;color:var(--green)}.section{margin:0 0 23px}.label{font-size:12px;letter-spacing:.045em;color:var(--muted);margin:0 0 10px}.value{font-size:clamp(19px,5.1vw,26px);font-weight:400;line-height:1.4;letter-spacing:0;overflow-wrap:anywhere}.result{padding:18px 16px;background:#1b3323;border-left:4px solid var(--green);margin:5px 0 22px}.result .label{color:#d9e9dc}.result .value{font-size:clamp(22px,6.9vw,30px);font-weight:400;color:var(--green)}.result.warn{background:#382b1e;border-color:var(--amber)}.result.warn .value{color:var(--amber)}.result.bad{background:#3a2020;border-color:var(--red)}.result.bad .value{color:var(--red)}.secondary{font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px}.note{font-size:12px;line-height:1.6;color:var(--amber);border-top:1px solid var(--line);padding-top:15px;margin:4px 0 0}.error{color:var(--amber);font-size:14px;line-height:1.7}
-    textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}
-    [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.mic{width:140px;height:140px}}
+    textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}.version{display:block;margin-top:10px;color:#789380;font-size:10px}
+    .manual{margin-top:26px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.manual .head{margin-bottom:18px}.manual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}.field{display:block;min-width:0}.field span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.field input{width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#070e09;color:var(--text);font:inherit;font-size:16px;color-scheme:dark}.manual-row{display:flex;align-items:stretch;gap:10px;margin-top:18px}.signs{display:flex;flex:none;align-self:flex-end;gap:4px}.signs button,.units button{min-height:48px;border:1px solid var(--line);border-radius:7px;background:#0a130d;color:var(--text);font-size:16px}.signs button{width:48px}.signs button[aria-pressed="true"],.units button[aria-pressed="true"]{background:#1d3b25;border-color:var(--green);color:var(--green)}.amount{flex:1;min-width:0}.amount input{width:100%}.units{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.units button{font-size:14px}.manual-result{margin:18px 0 0}.manual-result .result{margin:0}.manual-placeholder{border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.5;padding:14px;margin:0}.manual-error{color:var(--amber);font-size:13px;line-height:1.5;margin:0}
+    [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.manual{padding:16px}.mic{width:108px;height:108px}.signs button{width:44px}}
     @media(prefers-reduced-motion:reduce){.mic.listening{animation:none}}
   </style>
 </head>
@@ -38,8 +39,28 @@
         <div id="details" aria-live="polite"></div>
         <div class="actions"><button id="again" class="action" type="button">● 다시 말하기</button><button id="clear" class="action alt" type="button">처음으로</button></div>
       </section>
+      <section class="manual" aria-label="수동 시간 계산">
+        <div class="head"><span>&gt; MANUAL INPUT / 직접 입력</span><span>KST</span></div>
+        <div class="manual-grid">
+          <label class="field" for="manualDate"><span>기준 날짜</span><input id="manualDate" type="date" required></label>
+          <label class="field" for="manualTime"><span>기준 시각</span><input id="manualTime" type="time" step="60" required></label>
+        </div>
+        <div class="manual-row">
+          <div class="signs" role="group" aria-label="더하기 또는 빼기">
+            <button type="button" data-sign="1" aria-pressed="true" aria-label="더하기">+</button>
+            <button type="button" data-sign="-1" aria-pressed="false" aria-label="빼기">−</button>
+          </div>
+          <label class="field amount" for="manualAmount"><span>계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
+        </div>
+        <div class="units" role="group" aria-label="계산 단위">
+          <button type="button" data-unit="minutes" aria-pressed="false">분</button>
+          <button type="button" data-unit="hours" aria-pressed="false">시간</button>
+          <button type="button" data-unit="days" aria-pressed="false">일(날짜)</button>
+        </div>
+        <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
+      </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 브라우저 기능을 사용합니다.</footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 브라우저 기능을 사용합니다.<span class="version">v0.1.3</span></footer>
   </div>
   <script>
   (() => {
@@ -55,6 +76,61 @@
     const durationText=mins=>`${Math.floor(Math.abs(mins)/60)}시간 ${pad(Math.abs(mins)%60)}분`;
     const section=(name,value,sub='')=>`<div class="section"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
     const banner=(name,value,sub='',cls='')=>`<div class="result ${cls}"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
+    const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),manualResult=$('manualResult');
+    const kstToday=new Date(Date.now()+9*3600000);
+    manualDate.value=`${kstToday.getUTCFullYear()}-${pad(kstToday.getUTCMonth()+1)}-${pad(kstToday.getUTCDate())}`;
+    manualTime.value='';
+    let manualSign=1,manualUnit=null;
+    function renderManual(){
+      if(!manualUnit){manualResult.innerHTML='<p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p>';return}
+      const date=/^(\d{4})-(\d{2})-(\d{2})$/.exec(manualDate.value);
+      const time=/^(\d{2}):(\d{2})$/.exec(manualTime.value);
+      const amount=manualAmount.value.trim();
+      if(!date||!time||!amount){manualResult.innerHTML='<p class="manual-error">기준 날짜·시각과 계산할 숫자를 입력해 주세요.</p>';return}
+      if(!/^\d+$/.test(amount)||+amount<1){manualResult.innerHTML='<p class="manual-error">숫자는 1 이상의 정수로 입력해 주세요.</p>';return}
+      const scale={minutes:1,hours:60,days:1440}[manualUnit];
+      const minutes=Number(amount)*scale;
+      if(!Number.isSafeInteger(minutes)||minutes>5256000){manualResult.innerHTML='<p class="manual-error">계산 기간은 최대 10년까지 입력해 주세요.</p>';return}
+      try{
+        const start=kst(+date[1],+date[2],+date[3],+time[1],+time[2]);
+        const result=start+manualSign*minutes*60000;
+        const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
+        manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amount}${unitLabel}`);
+      }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
+    }
+    document.querySelectorAll('[data-sign]').forEach(button=>button.addEventListener('click',()=>{
+      manualSign=Number(button.dataset.sign);
+      document.querySelectorAll('[data-sign]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      renderManual();
+    }));
+    document.querySelectorAll('[data-unit]').forEach(button=>button.addEventListener('click',()=>{
+      manualUnit=button.dataset.unit;
+      document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      renderManual();
+    }));
+    [manualDate,manualTime,manualAmount].forEach(field=>{field.addEventListener('input',renderManual);field.addEventListener('change',renderManual)});
+    function syncManualFromVoice(raw){
+      const dates=parseDates(raw);
+      const limit=parseDuration(raw,dates);
+      const start=dates[0],local=new Date(start.ms+9*3600000);
+      manualDate.value=`${local.getUTCFullYear()}-${pad(local.getUTCMonth()+1)}-${pad(local.getUTCDate())}`;
+      manualTime.value=`${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}`;
+      manualSign=1;
+      document.querySelectorAll('[data-sign]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sign==='1')));
+      if(dates.length!==1||limit===null){
+        manualAmount.value='';manualUnit=null;
+        document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed','false'));
+        manualResult.innerHTML='<p class="manual-placeholder">시작 시각을 채웠습니다. 두 시점의 경과시간은 위 음성 결과에서 확인해 주세요.</p>';
+        return;
+      }
+      let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
+      const hasMinutes=/\d+\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/i.test(clean);
+      const hasHours=/\d+\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/i.test(clean);
+      manualUnit=hasMinutes?'minutes':hasHours?'hours':'days';
+      manualAmount.value=String(limit/{minutes:1,hours:60,days:1440}[manualUnit]);
+      document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.unit===manualUnit)));
+      renderManual();
+    }
     function kst(y,m,d,h,mi){
       if(!Number.isInteger(y)||y<1900||y>2100||m<1||m>12||d<1||d>31||h<0||h>23||mi<0||mi>59)throw Error('날짜 또는 시간이 올바르지 않습니다.');
       const base=Date.UTC(y,m-1,d,h,mi);
@@ -65,9 +141,9 @@
     function currentKst(){const d=new Date(Date.now()+9*3600000);return {year:d.getUTCFullYear(),month:d.getUTCMonth()+1};}
     function readClock(t){
       const s=t.trim().replace(/^[,，\s]+/,'');let h,mi=0,matched='';
-      let m=s.match(/^(오전|오후|AM|PM)\s*(\d{1,2})\s*(?:시|:)(?:\s*(\d{1,2})\s*분?)?/i);
+      let m=s.match(/^(오전|오후|AM|PM)\s*(\d{1,2})\s*(?:시(?!간)|:)(?:\s*(\d{1,2})\s*분?)?/i);
       if(m){h=+m[2];mi=+(m[3]||0);if(h<1||h>12)throw Error('오전·오후 시간은 1~12시로 입력해 주세요.');h=(h%12)+(m[1]==='오후'||/^PM$/i.test(m[1])?12:0);matched=m[0]}
-      else if((m=s.match(/^(\d{1,2})\s*시\s*(?:(\d{1,2})\s*분?)?/))){h=+m[1];mi=+(m[2]||0);matched=m[0]}
+      else if((m=s.match(/^(\d{1,2})\s*시(?!간)\s*(?:(\d{1,2})\s*분?)?/))){h=+m[1];mi=+(m[2]||0);matched=m[0]}
       else if((m=s.match(/^(\d{1,2}):(\d{2})\b/))){h=+m[1];mi=+m[2];matched=m[0]}
       else if((m=s.match(/^(\d{4})(?!\d)/))){h=+m[1].slice(0,2);mi=+m[1].slice(2);matched=m[0]}
       else if((m=s.match(/^(\d{1,2})\s*분/))){throw Error('날짜 뒤에 시각을 입력해 주세요. 예: 15시 30분')}
@@ -82,7 +158,12 @@
       let m;
       while((m=eng.exec(text))){let start=m.index+m[1].length,end=eng.lastIndex;matches.push({start,end,d:+m[2],month:MONTHS.indexOf(m[3])+1,year:+m[4],explicitYear:true,explicitMonth:true})}
       const kor=/(?:([12]\d{3})\s*년\s*)?(?:(\d{1,2})\s*월\s*)?(\d{1,2})\s*일/g;
-      while((m=kor.exec(text))){if(matches.some(v=>m.index>=v.start&&m.index<v.end))continue;matches.push({start:m.index,end:kor.lastIndex,d:+m[3],month:m[2]?+m[2]:null,year:m[1]?+m[1]:null,explicitYear:!!m[1],explicitMonth:!!m[2]})}
+      while((m=kor.exec(text))){
+        if(matches.some(v=>m.index>=v.start&&m.index<v.end))continue;
+        // A bare "4일 뒤" or "4일 12시간" is a duration, not a second date.
+        if(!m[1]&&!m[2]&&!/^\s*(?:오전|오후|AM|PM|\d{1,2}\s*시(?!간)|\d{1,2}:\d{2}|\d{4}(?!\d))/.test(text.slice(kor.lastIndex)))continue;
+        matches.push({start:m.index,end:kor.lastIndex,d:+m[3],month:m[2]?+m[2]:null,year:m[1]?+m[1]:null,explicitYear:!!m[1],explicitMonth:!!m[2]})
+      }
       matches.sort((a,b)=>a.start-b.start);
       if(!matches.length)throw Error('시작 날짜를 찾지 못했습니다. “9월 27일 15시 30분부터 40시간”처럼 말씀해 주세요.');
       if(matches.length>2)throw Error('날짜가 세 개 이상 인식되었습니다. 시작과 종료 두 시점만 입력해 주세요.');
@@ -99,11 +180,12 @@
     }
     function parseDuration(raw,dates){
       let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
+      const days=[...clean.matchAll(/(\d+)\s*(?:일|DAYS?|D)(?![A-Z])/gi)];
       const hours=[...clean.matchAll(/(\d+)\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/gi)];
       const minutes=[...clean.matchAll(/(\d+)\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/gi)];
-      if(hours.length>1||minutes.length>1)throw Error('제한시간은 한 번만 입력해 주세요. 예: 40시간 30분');
-      if(!hours.length&&!minutes.length)return null;
-      let total=(hours.length?+hours[0][1]*60:0)+(minutes.length?+minutes[0][1]:0);
+      if(days.length>1||hours.length>1||minutes.length>1)throw Error('같은 기간 단위는 한 번만 입력해 주세요. 예: 4일 12시간 30분');
+      if(!days.length&&!hours.length&&!minutes.length)return null;
+      let total=(days.length?+days[0][1]*1440:0)+(hours.length?+hours[0][1]*60:0)+(minutes.length?+minutes[0][1]:0);
       if(!Number.isSafeInteger(total)||total<=0||total>5256000)throw Error('제한시간은 1분 이상, 10년 이하로 입력해 주세요.');
       return total;
     }
@@ -122,7 +204,7 @@
       if(dates.some(d=>!d.explicitYear||!d.explicitMonth))html+='<p class="note">※ 생략된 연도·월은 한국 시간의 현재 연월 또는 앞선 날짜를 기준으로 해석했습니다. START/END를 확인해 주세요.</p>';
       return html;
     }
-    function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}try{details.innerHTML=calculate(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
+    function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}try{details.innerHTML=calculate(raw);syncManualFromVoice(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
     function show(textValue){intro.hidden=true;output.hidden=false;input.value=textValue;render();window.scrollTo(0,0)}
     function resetMic(){mic.classList.remove('listening');mic.setAttribute('aria-label','음성 입력 시작');hint.innerHTML='버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”'}
     function fallback(message){resetMic();show(input.value||'');details.insertAdjacentHTML('afterbegin',`<p class="error">⚠ ${message}</p>`);input.focus()}

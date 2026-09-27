@@ -7,17 +7,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>TIME LIMIT — 만료 시간 계산기</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
-    :root{color-scheme:dark;--bg:#070b09;--panel:#101914;--line:#294636;--text:#e9f5ed;--muted:#a6bdac;--green:#a4ffa8;--amber:#ffcc76;--red:#ff9a91}
+    :root{color-scheme:dark;--bg:#070b09;--panel:#101914;--line:#365441;--text:#e9f5ed;--muted:#bfd1c3;--green:#b8ffbf;--amber:#ffcc76;--red:#ff9a91}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{min-height:100dvh;margin:0;background:radial-gradient(ellipse at 50% 42%,#122219 0,#070b09 62%);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace}
     button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
     .shell{width:min(100%,660px);min-height:100dvh;margin:auto;padding:calc(env(safe-area-inset-top) + 24px) 22px calc(env(safe-area-inset-bottom) + 26px);display:flex;flex-direction:column}
-    h1,.top,.head,.label,.value,.action{font-family:"Pixelify Sans",ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace}
-    .top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:.17em}.live{color:var(--green);font-weight:bold}.live:before{content:"■ ";font-size:9px}
+    .top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:.12em}.live{color:var(--green);font-weight:400}.live:before{content:"■ ";font-size:9px}
     main{flex:1;display:flex;flex-direction:column;justify-content:center}.intro{text-align:center}.mic{display:grid;place-items:center;width:156px;height:156px;margin:0 auto 28px;border:2px solid var(--green);border-radius:22px;background:#16301c;color:var(--green);box-shadow:0 0 0 9px #a4ffa80c,0 0 52px #72e67c27;transition:transform .15s,background .2s}.mic:active{transform:scale(.96)}.mic svg{width:68px;height:68px;fill:currentColor;shape-rendering:crispEdges}.mic.listening{background:#275633;animation:pulse 1.2s infinite}@keyframes pulse{50%{box-shadow:0 0 0 17px #a4ffa81a,0 0 72px #72e67c55}}
-    h1{font-size:clamp(22px,6vw,32px);letter-spacing:.06em;margin:0 0 12px;color:var(--green)}.hint{font-size:14px;color:var(--muted);line-height:1.7;margin:0}.status{min-height:23px;margin:16px auto 0;color:var(--amber);font-size:13px;line-height:1.5}
-    .terminal{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px 20px 24px;box-shadow:0 20px 60px #0007}.head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px;font-size:12px;letter-spacing:.12em;color:var(--green)}.section{margin:0 0 23px}.label{font-size:11px;letter-spacing:.15em;color:var(--muted);margin:0 0 10px}.value{font-size:clamp(19px,5.1vw,26px);font-weight:750;line-height:1.4;letter-spacing:.025em;overflow-wrap:anywhere}.result{padding:18px 16px;background:#1b3323;border-left:4px solid var(--green);margin:5px 0 22px}.result .label{color:#c7e3cd}.result .value{font-size:clamp(24px,7vw,36px);color:var(--green)}.result.warn{background:#382b1e;border-color:var(--amber)}.result.warn .value{color:var(--amber)}.result.bad{background:#3a2020;border-color:var(--red)}.result.bad .value{color:var(--red)}.secondary{font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px}.note{font-size:12px;line-height:1.6;color:var(--amber);border-top:1px solid var(--line);padding-top:15px;margin:4px 0 0}.error{color:var(--amber);font-size:14px;line-height:1.7}
-    textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:bold}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#819a87;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}
+    h1{font-size:clamp(22px,6vw,32px);font-weight:400;letter-spacing:.06em;margin:0 0 12px;color:var(--green)}.hint{font-size:14px;color:var(--muted);line-height:1.7;margin:0}.status{min-height:23px;margin:16px auto 0;color:var(--amber);font-size:13px;line-height:1.5}
+    .terminal{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px 20px 24px;box-shadow:0 20px 60px #0007}.head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px;font-size:12px;letter-spacing:.07em;color:var(--green)}.section{margin:0 0 23px}.label{font-size:12px;letter-spacing:.045em;color:var(--muted);margin:0 0 10px}.value{font-size:clamp(19px,5.1vw,26px);font-weight:400;line-height:1.4;letter-spacing:0;overflow-wrap:anywhere}.result{padding:18px 16px;background:#1b3323;border-left:4px solid var(--green);margin:5px 0 22px}.result .label{color:#d9e9dc}.result .value{font-size:clamp(22px,6.9vw,30px);font-weight:400;color:var(--green)}.result.warn{background:#382b1e;border-color:var(--amber)}.result.warn .value{color:var(--amber)}.result.bad{background:#3a2020;border-color:var(--red)}.result.bad .value{color:var(--red)}.secondary{font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px}.note{font-size:12px;line-height:1.6;color:var(--amber);border-top:1px solid var(--line);padding-top:15px;margin:4px 0 0}.error{color:var(--amber);font-size:14px;line-height:1.7}
+    textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}
     [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.mic{width:140px;height:140px}}
     @media(prefers-reduced-motion:reduce){.mic.listening{animation:none}}
   </style>
@@ -31,7 +29,7 @@
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M26 6h12v4h4v22h-4v4H26v-4h-4V10h4zm-4 22h-6v8h4v4h8v4h-8v4h24v-4h-8v-4h8v-4h4v-8h-6v8H22z"/></svg>
         </button>
         <h1>TIME LIMIT</h1>
-        <p class="hint">버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”</p>
+        <p id="hint" class="hint">버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”</p>
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </section>
       <section id="output" class="terminal" hidden aria-label="계산 결과">
@@ -49,9 +47,9 @@
     const MONTHS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     const monthPattern=MONTHS.join('|');
     const $=id=>document.getElementById(id);
-    const intro=$('intro'),output=$('output'),status=$('status'),mic=$('mic'),input=$('input'),details=$('details');
+    const intro=$('intro'),output=$('output'),status=$('status'),mic=$('mic'),hint=$('hint'),input=$('input'),details=$('details');
     const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-    let recognition=null,listenFailed=false,debounce=null;
+    let recognition=null,listenTimer=null,endTimer=null,debounce=null;
     const pad=n=>String(n).padStart(2,'0');
     const display=ms=>{const d=new Date(ms+9*3600000);return `${pad(d.getUTCDate())}${MONTHS[d.getUTCMonth()]}${d.getUTCFullYear()} ${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}`};
     const durationText=mins=>`${Math.floor(Math.abs(mins)/60)}시간 ${pad(Math.abs(mins)%60)}분`;
@@ -126,21 +124,45 @@
     }
     function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}try{details.innerHTML=calculate(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
     function show(textValue){intro.hidden=true;output.hidden=false;input.value=textValue;render();window.scrollTo(0,0)}
-    function fallback(message){mic.classList.remove('listening');status.textContent=message;listenFailed=true;show(input.value||'');input.focus()}
+    function resetMic(){mic.classList.remove('listening');mic.setAttribute('aria-label','음성 입력 시작');hint.innerHTML='버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”'}
+    function fallback(message){resetMic();show(input.value||'');details.insertAdjacentHTML('afterbegin',`<p class="error">⚠ ${message}</p>`);input.focus()}
     function startListening(){
       if(!Recognition){fallback('이 브라우저에서는 음성 인식이 제공되지 않습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.');return}
-      if(recognition){try{recognition.stop()}catch{}recognition=null}
+      if(recognition){recognition.requestStop();return}
       let r;try{r=new Recognition();r.lang='ko-KR';r.continuous=false;r.interimResults=false;r.maxAlternatives=1;recognition=r;
-        r.onstart=()=>{mic.classList.add('listening');status.textContent='듣고 있습니다… 말씀해 주세요.'};
-        r.onresult=e=>{const phrase=e.results?.[0]?.[0]?.transcript?.trim();if(phrase){listenFailed=false;show(phrase)}};
-        r.onerror=e=>{const reason=e.error==='not-allowed'||e.error==='service-not-allowed'?'마이크 권한을 확인해 주세요.':e.error==='no-speech'?'음성이 들리지 않았습니다.':e.error==='network'?'음성 인식 연결에 실패했습니다.':'음성 인식을 사용할 수 없습니다.';fallback(`${reason} 문장을 입력하거나 키보드 마이크를 사용해 주세요.`)};
-        r.onend=()=>{mic.classList.remove('listening');if(output.hidden&&!listenFailed){status.textContent='인식이 끝났습니다. 버튼을 눌러 다시 시도해 주세요.'}};
+        let transcript='',error='',stopping=false,finished=false;
+        const finish=()=>{
+          if(finished)return;finished=true;clearTimeout(listenTimer);clearTimeout(endTimer);
+          if(recognition!==r)return;recognition=null;resetMic();
+          if(transcript){status.textContent='';show(transcript)}
+          else{status.textContent=error||'인식된 말이 없습니다. 버튼을 눌러 다시 시도해 주세요.'}
+        };
+        r.requestStop=()=>{
+          if(stopping||finished)return;stopping=true;clearTimeout(listenTimer);status.textContent='음성 인식을 마치는 중입니다…';
+          try{r.stop()}catch{try{r.abort()}catch{}finish();return}
+          endTimer=setTimeout(()=>{if(finished)return;try{r.abort()}catch{}finish()},2000);
+        };
+        r.onstart=()=>{
+          if(recognition!==r)return;
+          mic.classList.add('listening');mic.setAttribute('aria-label','음성 입력 종료');
+          hint.textContent='듣는 중입니다. 말이 끝나면 자동으로 종료됩니다.';
+          status.textContent='버튼을 다시 누르면 바로 종료합니다.';
+          listenTimer=setTimeout(()=>{error='25초가 지나 인식을 종료했습니다. 다시 시도해 주세요.';r.requestStop()},25000);
+        };
+        r.onspeechend=()=>r.requestStop();
+        r.onresult=e=>{transcript=e.results?.[0]?.[0]?.transcript?.trim()||transcript;r.requestStop()};
+        r.onerror=e=>{
+          error=e.error==='not-allowed'||e.error==='service-not-allowed'?'마이크 권한을 확인해 주세요.':e.error==='no-speech'?'음성이 들리지 않았습니다.':e.error==='network'?'음성 인식 연결에 실패했습니다.':'음성 인식을 사용할 수 없습니다.';
+          clearTimeout(listenTimer);
+          if(!stopping){try{r.abort()}catch{}endTimer=setTimeout(finish,2000)}
+        };
+        r.onend=finish;
         r.start();
-      }catch{fallback('음성 인식을 시작할 수 없습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.')}
+      }catch{if(recognition===r)recognition=null;clearTimeout(listenTimer);clearTimeout(endTimer);fallback('음성 인식을 시작할 수 없습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.')}
     }
     mic.addEventListener('click',startListening);
     $('again').addEventListener('click',()=>{intro.hidden=false;output.hidden=true;status.textContent='';startListening()});
-    $('clear').addEventListener('click',()=>{if(recognition){try{recognition.abort()}catch{}recognition=null}input.value='';details.innerHTML='';output.hidden=true;intro.hidden=false;status.textContent='';mic.classList.remove('listening')});
+    $('clear').addEventListener('click',()=>{if(recognition){try{recognition.abort()}catch{}recognition=null}clearTimeout(listenTimer);clearTimeout(endTimer);input.value='';details.innerHTML='';output.hidden=true;intro.hidden=false;status.textContent='';resetMic()});
     input.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(render,130)});
   })();
   </script>

@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Time Limit · 시간 계산기",
+  "short_name": "Time Limit",
+  "description": "음성 및 수동 입력으로 날짜와 제한시간을 계산합니다.",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070b09",
+  "theme_color": "#070b09",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

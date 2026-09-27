@@ -21,7 +21,7 @@
     h1{font-size:clamp(22px,6vw,32px);font-weight:400;letter-spacing:.06em;margin:0 0 12px;color:var(--green)}.hint{font-size:14px;color:var(--muted);line-height:1.7;margin:0}.status{min-height:23px;margin:16px auto 0;color:var(--amber);font-size:13px;line-height:1.5}
     .terminal{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px 20px 24px;box-shadow:0 20px 60px #0007}.head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px;font-size:12px;letter-spacing:.07em;color:var(--green)}.section{margin:0 0 23px}.label{font-size:12px;letter-spacing:.045em;color:var(--muted);margin:0 0 10px}.value{font-size:clamp(19px,5.1vw,26px);font-weight:400;line-height:1.4;letter-spacing:0;overflow-wrap:anywhere}.result{padding:18px 16px;background:#1b3323;border-left:4px solid var(--green);margin:5px 0 22px}.result .label{color:#d9e9dc}.result .value{font-size:clamp(22px,6.9vw,30px);font-weight:400;color:var(--green)}.result.warn{background:#382b1e;border-color:var(--amber)}.result.warn .value{color:var(--amber)}.result.bad{background:#3a2020;border-color:var(--red)}.result.bad .value{color:var(--red)}.secondary{font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px}.note{font-size:12px;line-height:1.6;color:var(--amber);border-top:1px solid var(--line);padding-top:15px;margin:4px 0 0}.error{color:var(--amber);font-size:14px;line-height:1.7}
     textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}.version{display:block;margin-top:10px;color:#789380;font-size:10px}
-    .manual{margin-top:26px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.manual .head{margin-bottom:18px}.manual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}.field{display:block;min-width:0}.field span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.field input{width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#070e09;color:var(--text);font:inherit;font-size:16px;color-scheme:dark}.manual-row{display:flex;align-items:stretch;gap:10px;margin-top:18px}.signs{display:flex;flex:none;align-self:flex-end;gap:4px}.signs button,.units button{min-height:48px;border:1px solid var(--line);border-radius:7px;background:#0a130d;color:var(--text);font-size:16px}.signs button{width:48px}.signs button[aria-pressed="true"],.units button[aria-pressed="true"]{background:#1d3b25;border-color:var(--green);color:var(--green)}.amount{flex:1;min-width:0}.amount input{width:100%}.units{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.units button{font-size:14px}.manual-result{margin:18px 0 0}.manual-result .result{margin:0}.manual-placeholder{border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.5;padding:14px;margin:0}.manual-error{color:var(--amber);font-size:13px;line-height:1.5;margin:0}
+    .manual{margin-top:26px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.manual .head{margin-bottom:18px}.manual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}.field{display:block;min-width:0}.field span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.field input{width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#070e09;color:var(--text);font:inherit;font-size:16px;color-scheme:dark}.manual-row{display:flex;align-items:stretch;gap:10px;margin-top:18px}.signs{display:flex;flex:none;align-self:flex-end;gap:4px}.signs button,.units button{min-height:48px;border:1px solid var(--line);border-radius:7px;background:#0a130d;color:var(--text);font-size:16px}.signs button{width:48px}.signs button[aria-pressed="true"],.units button[aria-pressed="true"]{background:#1d3b25;border-color:var(--green);color:var(--green)}.signs button:disabled{opacity:.55;cursor:default}.signs button[aria-pressed="true"]:disabled{opacity:1}.amount{flex:1;min-width:0}.amount input{width:100%}.units{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}.units button{font-size:14px}.manual-result{margin:18px 0 0}.manual-result .result{margin:0}.manual-placeholder{border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.5;padding:14px;margin:0}.manual-error{color:var(--amber);font-size:13px;line-height:1.5;margin:0}
     [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.manual{padding:16px}.mic{width:108px;height:108px}.signs button{width:44px}}
     @media(prefers-reduced-motion:reduce){.mic.listening{animation:none}}
   </style>
@@ -55,17 +55,19 @@
             <button type="button" data-sign="1" aria-pressed="true" aria-label="더하기">+</button>
             <button type="button" data-sign="-1" aria-pressed="false" aria-label="빼기">−</button>
           </div>
-          <label class="field amount" for="manualAmount"><span>계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
+          <label id="amountField" class="field amount" for="manualAmount"><span>계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
+          <label id="endField" class="field amount" for="manualEnd" hidden><span>종료 일시 · DDMMMYYYY hhmm</span><input id="manualEnd" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="14" placeholder="예: 28SEP2026 1815" aria-label="종료 일시, 예: 28SEP2026 1815"></label>
         </div>
         <div class="units" role="group" aria-label="계산 단위">
           <button type="button" data-unit="minutes" aria-pressed="false">분</button>
           <button type="button" data-unit="hours" aria-pressed="false">시간</button>
-          <button type="button" data-unit="days" aria-pressed="false">일(날짜)</button>
+          <button type="button" data-unit="days" aria-pressed="false">일</button>
+          <button type="button" data-unit="difference" aria-pressed="false">날짜 차이</button>
         </div>
         <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.5 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.6 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -81,55 +83,89 @@
     const durationText=mins=>`${Math.floor(Math.abs(mins)/60)}시간 ${pad(Math.abs(mins)%60)}분`;
     const section=(name,value,sub='')=>`<div class="section"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
     const banner=(name,value,sub='',cls='')=>`<div class="result ${cls}"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
-    const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),manualResult=$('manualResult');
+    const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),manualEnd=$('manualEnd'),manualResult=$('manualResult');
+    const signButtons=[...document.querySelectorAll('[data-sign]')],unitButtons=[...document.querySelectorAll('[data-unit]')];
     const kstToday=new Date(Date.now()+9*3600000);
     manualDate.value=`${pad(kstToday.getUTCDate())}${MONTHS[kstToday.getUTCMonth()]}${kstToday.getUTCFullYear()}`;
     manualTime.value='';
-    let manualSign=1,manualUnit=null;
+    let manualSign=1,previousSign=1,manualUnit=null;
+    function updateManualControls(){
+      const difference=manualUnit==='difference';
+      $('amountField').hidden=difference;
+      $('endField').hidden=!difference;
+      signButtons.forEach(b=>{b.disabled=difference;b.setAttribute('aria-pressed',String(b.dataset.sign===String(manualSign)))});
+      unitButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.unit===manualUnit)));
+    }
     function renderManual(){
       if(!manualUnit){manualResult.innerHTML='<p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p>';return}
       const date=/^(\d{2})([A-Z]{3})(\d{4})$/.exec(manualDate.value.trim().toUpperCase());
       const time=/^([01]\d|2[0-3])([0-5]\d)$/.exec(manualTime.value.trim());
-      const amount=manualAmount.value.trim();
-      if(!manualDate.value.trim()||!manualTime.value.trim()||!amount){manualResult.innerHTML='<p class="manual-error">기준 날짜·시각과 계산할 숫자를 입력해 주세요.</p>';return}
+      if(!manualDate.value.trim()||!manualTime.value.trim()){manualResult.innerHTML='<p class="manual-error">기준 날짜와 시각을 입력해 주세요.</p>';return}
       if(!date||!MONTHS.includes(date[2])){manualResult.innerHTML='<p class="manual-error">날짜는 27SEP2026처럼 DDMMMYYYY 형식으로 입력해 주세요.</p>';return}
       if(!time){manualResult.innerHTML='<p class="manual-error">시각은 24시간제 네 자리로 입력해 주세요. 예: 1530</p>';return}
+      let start;
+      try{start=kst(+date[3],MONTHS.indexOf(date[2])+1,+date[1],+time[1],+time[2])}
+      catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`;return}
+      if(manualUnit==='difference'){
+        const endText=manualEnd.value.trim().toUpperCase();
+        if(!endText){manualResult.innerHTML='<p class="manual-placeholder">종료 일시를 입력하면 경과시간이 여기에 표시됩니다.</p>';return}
+        const endParts=/^(\d{2})([A-Z]{3})(\d{4})\s+([01]\d|2[0-3])([0-5]\d)$/.exec(endText);
+        if(!endParts||!MONTHS.includes(endParts[2])){manualResult.innerHTML='<p class="manual-error">종료 일시는 28SEP2026 1815처럼 입력해 주세요.</p>';return}
+        try{
+          const end=kst(+endParts[3],MONTHS.indexOf(endParts[2])+1,+endParts[1],+endParts[4],+endParts[5]);
+          if(end<start){manualResult.innerHTML='<p class="manual-error">종료 일시가 기준 일시보다 빠릅니다. 두 날짜를 확인해 주세요.</p>';return}
+          const minutes=(end-start)/60000;
+          const elapsed=`${pad(Math.floor(minutes/60))}${pad(minutes%60)}`;
+          manualResult.innerHTML=banner('ELAPSED / 경과시간 · hhmm',elapsed,`${durationText(minutes)} · 총 ${minutes.toLocaleString('ko-KR')}분<br>${display(end)} − ${display(start)}`);
+        }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
+        return;
+      }
+      const amount=manualAmount.value.trim();
+      if(!amount){manualResult.innerHTML='<p class="manual-error">계산할 숫자를 입력해 주세요.</p>';return}
       if(!/^\d+$/.test(amount)||+amount<1){manualResult.innerHTML='<p class="manual-error">숫자는 1 이상의 정수로 입력해 주세요.</p>';return}
       const scale={minutes:1,hours:60,days:1440}[manualUnit];
       const minutes=Number(amount)*scale;
       if(!Number.isSafeInteger(minutes)||minutes>5256000){manualResult.innerHTML='<p class="manual-error">계산 기간은 최대 10년까지 입력해 주세요.</p>';return}
       try{
-        const start=kst(+date[3],MONTHS.indexOf(date[2])+1,+date[1],+time[1],+time[2]);
         const result=start+manualSign*minutes*60000;
         const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
         manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amount}${unitLabel}`);
       }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
     }
-    document.querySelectorAll('[data-sign]').forEach(button=>button.addEventListener('click',()=>{
+    signButtons.forEach(button=>button.addEventListener('click',()=>{
       manualSign=Number(button.dataset.sign);
-      document.querySelectorAll('[data-sign]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      previousSign=manualSign;
+      updateManualControls();
       renderManual();
     }));
-    document.querySelectorAll('[data-unit]').forEach(button=>button.addEventListener('click',()=>{
+    unitButtons.forEach(button=>button.addEventListener('click',()=>{
+      const wasDifference=manualUnit==='difference';
+      if(button.dataset.unit==='difference'&&manualUnit!=='difference')previousSign=manualSign;
       manualUnit=button.dataset.unit;
-      document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      manualSign=manualUnit==='difference'?-1:wasDifference?previousSign:manualSign;
+      updateManualControls();
       renderManual();
     }));
     manualDate.addEventListener('input',()=>{manualDate.value=manualDate.value.toUpperCase();renderManual()});
     [manualTime,manualAmount].forEach(field=>field.addEventListener('input',renderManual));
     [manualDate,manualTime,manualAmount].forEach(field=>field.addEventListener('change',renderManual));
+    manualEnd.addEventListener('input',()=>{manualEnd.value=manualEnd.value.toUpperCase();renderManual()});
+    manualEnd.addEventListener('change',renderManual);
     function syncManualFromVoice(raw){
       const dates=parseDates(raw);
       const limit=parseDuration(raw,dates);
       const start=dates[0],local=new Date(start.ms+9*3600000);
       manualDate.value=`${pad(local.getUTCDate())}${MONTHS[local.getUTCMonth()]}${local.getUTCFullYear()}`;
       manualTime.value=`${pad(local.getUTCHours())}${pad(local.getUTCMinutes())}`;
-      manualSign=1;
-      document.querySelectorAll('[data-sign]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sign==='1')));
-      if(dates.length!==1||limit===null){
-        manualAmount.value='';manualUnit=null;
-        document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed','false'));
-        manualResult.innerHTML='<p class="manual-placeholder">시작 시각을 채웠습니다. 두 시점의 경과시간은 위 음성 결과에서 확인해 주세요.</p>';
+      if(dates.length===2){
+        const end=new Date(dates[1].ms+9*3600000);
+        manualEnd.value=`${pad(end.getUTCDate())}${MONTHS[end.getUTCMonth()]}${end.getUTCFullYear()} ${pad(end.getUTCHours())}${pad(end.getUTCMinutes())}`;
+        manualUnit='difference';manualSign=-1;updateManualControls();renderManual();
+        return;
+      }
+      manualSign=1;previousSign=1;
+      if(limit===null){
+        manualAmount.value='';manualUnit=null;updateManualControls();renderManual();
         return;
       }
       let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
@@ -137,7 +173,7 @@
       const hasHours=/\d+\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/i.test(clean);
       manualUnit=hasMinutes?'minutes':hasHours?'hours':'days';
       manualAmount.value=String(limit/{minutes:1,hours:60,days:1440}[manualUnit]);
-      document.querySelectorAll('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.unit===manualUnit)));
+      updateManualControls();
       renderManual();
     }
     function kst(y,m,d,h,mi){

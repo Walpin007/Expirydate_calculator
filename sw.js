@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v0.1.6';
+const VERSION = 'v0.1.7';
 const BASE = self.registration.scope;
 const PREFIX = 'time-limit:' + BASE + ':';
 const CACHE = PREFIX + VERSION;
@@ -41,3 +41,4 @@ self.addEventListener('fetch', event => {
     } finally { clearTimeout(timer); }
   })());
 });
+

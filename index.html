@@ -55,19 +55,21 @@
             <button type="button" data-sign="1" aria-pressed="true" aria-label="더하기">+</button>
             <button type="button" data-sign="-1" aria-pressed="false" aria-label="빼기">−</button>
           </div>
-          <label id="amountField" class="field amount" for="manualAmount"><span>계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
+          <label id="amountField" class="field amount" for="manualAmount"><span id="amountLabel">계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
           <label id="endField" class="field amount" for="manualEnd" hidden><span>종료 일시 · DDMMMYYYY hhmm</span><input id="manualEnd" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="14" placeholder="예: 28SEP2026 1815" aria-label="종료 일시, 예: 28SEP2026 1815"></label>
         </div>
         <div class="units" role="group" aria-label="계산 단위">
           <button type="button" data-unit="minutes" aria-pressed="false">분</button>
           <button type="button" data-unit="hours" aria-pressed="false">시간</button>
           <button type="button" data-unit="days" aria-pressed="false">일</button>
+          <button type="button" data-unit="hhmm" aria-pressed="false">HHMM · 시간/분</button>
           <button type="button" data-unit="difference" aria-pressed="false">날짜 차이</button>
         </div>
+        <p id="hhmmHelp" class="secondary" hidden>기간 입력: 0130 = 1시간 30분 · 2645 = 26시간 45분<br>4자리 이상 숫자, 마지막 두 자리는 분(00~59)입니다.</p>
         <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.6 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.7 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -93,6 +95,13 @@
       const difference=manualUnit==='difference';
       $('amountField').hidden=difference;
       $('endField').hidden=!difference;
+      const hhmm=manualUnit==='hhmm';
+      $('amountLabel').textContent=hhmm?'계산할 기간 · HHMM':'계산할 숫자';
+      $('hhmmHelp').hidden=!hhmm;
+      // Text input preserves leading zeroes, including on mobile keyboards.
+      manualAmount.type=hhmm?'text':'number';
+      manualAmount.placeholder=hhmm?'예: 0130 또는 2645':'숫자 입력';
+      manualAmount.setAttribute('aria-label',hhmm?'계산할 기간, 시간과 분 HHMM':'계산할 숫자');
       signButtons.forEach(b=>{b.disabled=difference;b.setAttribute('aria-pressed',String(b.dataset.sign===String(manualSign)))});
       unitButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.unit===manualUnit)));
     }
@@ -122,14 +131,12 @@
       }
       const amount=manualAmount.value.trim();
       if(!amount){manualResult.innerHTML='<p class="manual-error">계산할 숫자를 입력해 주세요.</p>';return}
-      if(!/^\d+$/.test(amount)||+amount<1){manualResult.innerHTML='<p class="manual-error">숫자는 1 이상의 정수로 입력해 주세요.</p>';return}
-      const scale={minutes:1,hours:60,days:1440}[manualUnit];
-      const minutes=Number(amount)*scale;
-      if(!Number.isSafeInteger(minutes)||minutes>5256000){manualResult.innerHTML='<p class="manual-error">계산 기간은 최대 10년까지 입력해 주세요.</p>';return}
       try{
+        const minutes=parseManualDuration(amount,manualUnit);
         const result=start+manualSign*minutes*60000;
         const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
-        manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amount}${unitLabel}`);
+        const amountText=manualUnit==='hhmm'?durationText(minutes):`${amount}${unitLabel}`;
+        manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amountText}`);
       }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
     }
     signButtons.forEach(button=>button.addEventListener('click',()=>{
@@ -176,8 +183,24 @@
       updateManualControls();
       renderManual();
     }
+    function parseManualDuration(amount,unit){
+      const text=String(amount).trim();
+      let minutes;
+      if(unit==='hhmm'){
+        if(!/^\d{4,}$/.test(text)||Number(text.slice(-2))>59)throw Error('기간은 HHMM 형식으로 입력해 주세요. 예: 0130, 2645 (분: 00~59)');
+        minutes=Number(text.slice(0,-2))*60+Number(text.slice(-2));
+      }else{
+        const scale={minutes:1,hours:60,days:1440}[unit];
+        if(!scale)throw Error('계산 단위를 선택해 주세요.');
+        if(!/^\d+$/.test(text)||Number(text)<1)throw Error('숫자는 1 이상의 정수로 입력해 주세요.');
+        minutes=Number(text)*scale;
+      }
+      if(!Number.isSafeInteger(minutes)||minutes>5256000)throw Error('계산 기간은 최대 10년까지 입력해 주세요.');
+      if(minutes<1)throw Error('계산 기간은 1분 이상 입력해 주세요.');
+      return minutes;
+    }
     function kst(y,m,d,h,mi){
-      if(!Number.isInteger(y)||y<1900||y>2100||m<1||m>12||d<1||d>31||h<0||h>23||mi<0||mi>59)throw Error('날짜 또는 시간이 올바르지 않습니다.');
+      if(![y,m,d,h,mi].every(Number.isInteger)||y<1900||y>2100||m<1||m>12||d<1||d>31||h<0||h>23||mi<0||mi>59)throw Error('날짜 또는 시간이 올바르지 않습니다.');
       const base=Date.UTC(y,m-1,d,h,mi);
       const check=new Date(base);
       if(check.getUTCFullYear()!==y||check.getUTCMonth()!==m-1||check.getUTCDate()!==d)throw Error('해당 월에 존재하지 않는 날짜입니다.');
@@ -193,6 +216,7 @@
       else if((m=s.match(/^(\d{4})(?!\d)/))){h=+m[1].slice(0,2);mi=+m[1].slice(2);matched=m[0]}
       else if((m=s.match(/^(\d{1,2})\s*분/))){throw Error('날짜 뒤에 시각을 입력해 주세요. 예: 15시 30분')}
       else throw Error('날짜 뒤에 시각을 입력해 주세요. 예: 15시 30분 또는 1530');
+      if(/^\d/.test(s.slice(matched.length)))throw Error('시각의 숫자 자릿수를 확인해 주세요.');
       if(h>23||mi>59)throw Error('시간은 00~23시, 분은 00~59분으로 입력해 주세요.');
       return {h,mi,length:matched.length};
     }
@@ -225,6 +249,11 @@
     }
     function parseDuration(raw,dates){
       let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
+      // Reject malformed numeric tokens instead of calculating their integer suffix.
+      const tokens=clean.matchAll(/([+\-−]?\s*(?:\d[\d.,eE+\-−]*|[.,]\d+))\s*(?:시간|분|일|HOURS?|HRS?|HR|MINUTES?|MINS?|MIN|DAYS?|[DHM])(?![A-Z])/gi);
+      for(const token of tokens){
+        if(!/^\d+$/.test(token[1].trim()))throw Error('기간은 부호나 소수점 없이 정수로 입력해 주세요.');
+      }
       const days=[...clean.matchAll(/(\d+)\s*(?:일|DAYS?|D)(?![A-Z])/gi)];
       const hours=[...clean.matchAll(/(\d+)\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/gi)];
       const minutes=[...clean.matchAll(/(\d+)\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/gi)];
@@ -295,3 +324,4 @@
   </script>
 </body>
 </html>
+

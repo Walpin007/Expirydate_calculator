@@ -30,7 +30,7 @@ function loadApp(now = '2026-09-27T15:30:00Z') {
   const suffix = '  })();';
   if (!scripts[0].includes(suffix)) throw Error('Application test seam not found');
   // Instrument only the in-memory copy. No exports/hooks/dependencies ship to the browser.
-  const script = scripts[0].replace(suffix, `globalThis.api = { kst, display, durationText, readClock, currentKst, parseDates, parseDuration, calculate, syncManualFromVoice, renderManual, ${scripts[0].includes('function parseManualDuration(') ? 'parseManualDuration,' : ''} };\n${suffix}`);
+  const script = scripts[0].replace(suffix, `globalThis.api = { kst, display, durationText, readClock, currentKst, parseDates, parseDuration, calculate, syncManualFromVoice, renderManual, render, ${scripts[0].includes('function parseManualDuration(') ? 'parseManualDuration,' : ''} };\n${suffix}`);
   vm.runInContext(script, context, { filename: 'index.html:inline' });
   return { api: context.api, el: id => elements.get(id), signs, units,
     unit(name) { const b = units.find(b => b.dataset.unit === name); if (!b) throw Error('Missing unit ' + name); b.fire('click'); },

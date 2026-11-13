@@ -69,7 +69,7 @@
         <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.7 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.8 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -206,7 +206,7 @@
       if(check.getUTCFullYear()!==y||check.getUTCMonth()!==m-1||check.getUTCDate()!==d)throw Error('해당 월에 존재하지 않는 날짜입니다.');
       return base-9*3600000;
     }
-    function currentKst(){const d=new Date(Date.now()+9*3600000);return {year:d.getUTCFullYear(),month:d.getUTCMonth()+1};}
+    function currentKst(){const d=new Date(Date.now()+9*3600000);return {year:d.getUTCFullYear(),month:d.getUTCMonth()+1,day:d.getUTCDate()};}
     function readClock(t){
       const s=t.trim().replace(/^[,，\s]+/,'');let h,mi=0,matched='';
       let m=s.match(/^(오전|오후|AM|PM)\s*(\d{1,2})\s*(?:시(?!간)|:)(?:\s*(\d{1,2})\s*분?)?/i);
@@ -223,6 +223,7 @@
     function parseDates(raw){
       const text=raw.toUpperCase().replace(/[.,]/g,' ');
       const matches=[];
+      const now=currentKst();
       const eng=new RegExp(`(^|[^A-Z0-9])(\\d{1,2})\\s*(${monthPattern})\\s*(\\d{4})(?=\\s|$|[^A-Z0-9])`,'g');
       let m;
       while((m=eng.exec(text))){let start=m.index+m[1].length,end=eng.lastIndex;matches.push({start,end,d:+m[2],month:MONTHS.indexOf(m[3])+1,year:+m[4],explicitYear:true,explicitMonth:true})}
@@ -233,10 +234,15 @@
         if(!m[1]&&!m[2]&&!/^\s*(?:오전|오후|AM|PM|\d{1,2}\s*시(?!간)|\d{1,2}:\d{2}|\d{4}(?!\d))/.test(text.slice(kor.lastIndex)))continue;
         matches.push({start:m.index,end:kor.lastIndex,d:+m[3],month:m[2]?+m[2]:null,year:m[1]?+m[1]:null,explicitYear:!!m[1],explicitMonth:!!m[2]})
       }
+      const today=/오늘/g;
+      while((m=today.exec(text))){
+        if(matches.some(v=>m.index>=v.start&&m.index<v.end))continue;
+        matches.push({start:m.index,end:today.lastIndex,d:now.day,month:now.month,year:now.year,explicitYear:true,explicitMonth:true});
+      }
       matches.sort((a,b)=>a.start-b.start);
-      if(!matches.length)throw Error('시작 날짜를 찾지 못했습니다. “9월 27일 15시 30분부터 40시간”처럼 말씀해 주세요.');
+      if(!matches.length)throw Error('시작 날짜를 찾지 못했습니다. “오늘 15시 30분부터 40시간”처럼 말씀해 주세요.');
       if(matches.length>2)throw Error('날짜가 세 개 이상 인식되었습니다. 시작과 종료 두 시점만 입력해 주세요.');
-      const now=currentKst();let prev=null;
+      let prev=null;
       for(const item of matches){
         const after=text.slice(item.end).match(/^\s*/)[0].length;
         const clock=readClock(text.slice(item.end+after));item.end+=after+clock.length;
@@ -278,7 +284,16 @@
       if(dates.some(d=>!d.explicitYear||!d.explicitMonth))html+='<p class="note">※ 생략된 연도·월은 한국 시간의 현재 연월 또는 앞선 날짜를 기준으로 해석했습니다. START/END를 확인해 주세요.</p>';
       return html;
     }
-    function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}try{details.innerHTML=calculate(raw);syncManualFromVoice(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
+    function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}
+      if(/^오늘\s*(?:날짜)?[.!。]?$/.test(raw)){
+        const today=currentKst();
+        manualDate.value=`${pad(today.day)}${MONTHS[today.month-1]}${today.year}`;
+        manualTime.value='';
+        renderManual();
+        details.innerHTML='<p class="error">시각과 계산할 기간을 말씀하거나 아래에 입력해 주세요. 예: 오늘 15시부터 40시간</p>';
+        return;
+      }
+      try{details.innerHTML=calculate(raw);syncManualFromVoice(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
     function show(textValue){intro.hidden=true;output.hidden=false;input.value=textValue;render();window.scrollTo(0,0)}
     function resetMic(){mic.classList.remove('listening');mic.setAttribute('aria-label','음성 입력 시작');hint.innerHTML='버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”'}
     function fallback(message){resetMic();show(input.value||'');details.insertAdjacentHTML('afterbegin',`<p class="error">⚠ ${message}</p>`);input.focus()}

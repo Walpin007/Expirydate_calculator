@@ -8,7 +8,7 @@ const { ROOT, element } = require('./harness.cjs');
 const BASE='https://example.test/Expirydate_calculator/';
 function worker() {
   const handlers={}, stores=new Map(), deleted=[];let claimed=0,skipped=0;
-  const cacheName='time-limit:'+BASE+':v0.1.7';
+  const cacheName='time-limit:'+BASE+':v0.1.8';
   const cache={ entries:new Map(), async addAll(requests){this.requests=requests;},
     async put(key,res){this.entries.set(key,res);}, async match(key){return this.entries.get(key)?.clone();} };
   stores.set(cacheName,cache);
@@ -53,8 +53,8 @@ test('service worker ignores non-GET, external and unrelated requests',async()=>
 test('manifest identity, relative paths and release version remain consistent',()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'manifest.webmanifest'),'utf8'));
   assert.equal(manifest.id,'./');assert.equal(manifest.scope,'./');assert.equal(manifest.start_url,'./');assert.equal(manifest.display,'standalone');
-  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.7 · PWA/);
-  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.7'/);
+  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.8 · PWA/);
+  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.8'/);
   assert.match(html,/<script src="\.\/pwa.js" defer>/);
 });
 function pwa(secure=true) {

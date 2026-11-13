@@ -84,6 +84,37 @@ test('KST epoch, formatting, default date and omitted year use KST near UTC midn
   assert.equal(app.el('manualDate').value,'01JAN2027');
   assert.equal(a.display(a.parseDates('1일 1시부터 1시간')[0].ms),'01JAN2027 0100');
 });
+test('오늘 resolves to the current KST date across midnight and fills manual controls', () => {
+  for (const [instant,day,result] of [
+    ['2026-11-12T14:59:59Z','12NOV2026','14NOV2026 0730'],
+    ['2026-11-12T15:00:00Z','13NOV2026','15NOV2026 0730']
+  ]) {
+    const app=loadApp(instant),a=app.api;
+    const raw='오늘 15시 30분부터 40시간';
+    assert.equal(a.display(a.parseDates(raw)[0].ms),day+' 1530');
+    assert.match(a.calculate(raw),new RegExp(result));
+    a.syncManualFromVoice(raw);
+    assert.equal(app.el('manualDate').value,day);
+    assert.equal(app.el('manualTime').value,'1530');
+    assert.match(app.el('manualResult').innerHTML,new RegExp(result));
+  }
+});
+test('오늘 can identify both dates or a single date without a clock', () => {
+  const app=loadApp('2026-11-12T15:00:00Z'),a=app.api;
+  const raw='오늘 13시부터 오늘 18시 45분까지';
+  assert.equal(a.parseDates(raw).length,2);
+  assert.match(a.calculate(raw),/5시간 45분/);
+  a.syncManualFromVoice(raw);
+  assert.match(app.el('manualResult').innerHTML,/>0545</);
+  assert.throws(()=>a.calculate('오늘부터 40시간'),/시각/);
+  app.el('manualDate').value='01JAN2026';
+  app.el('manualTime').value='1230';
+  app.el('input').value='오늘';
+  a.render();
+  assert.equal(app.el('manualDate').value,'13NOV2026');
+  assert.equal(app.el('manualTime').value,'');
+  assert.match(app.el('details').innerHTML,/시각과 계산할 기간/);
+});
 test('kst rejects non-integer and non-finite components', () => {
   const a=loadApp().api;
   for(let i=0;i<5;i++) for(const value of [NaN,Infinity,1.5,undefined]) {

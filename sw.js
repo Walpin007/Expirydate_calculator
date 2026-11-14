@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v0.1.9';
+const VERSION = 'v0.1.10';
 const BASE = self.registration.scope;
 const PREFIX = 'time-limit:' + BASE + ':';
 const CACHE = PREFIX + VERSION;

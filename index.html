@@ -23,6 +23,7 @@
     textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}.version{display:block;margin-top:10px;color:#789380;font-size:10px}
     .manual{margin-top:26px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.manual .head{margin-bottom:18px}.manual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}.field{display:block;min-width:0}.field span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.field input{width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#070e09;color:var(--text);font:inherit;font-size:16px;color-scheme:dark}.manual-row{display:flex;align-items:stretch;gap:10px;margin-top:18px}.signs{display:flex;flex:none;align-self:flex-end;gap:4px}.signs button,.units button{min-height:48px;border:1px solid var(--line);border-radius:7px;background:#0a130d;color:var(--text);font-size:16px}.signs button{width:48px}.signs button[aria-pressed="true"],.units button[aria-pressed="true"]{background:#1d3b25;border-color:var(--green);color:var(--green)}.signs button:disabled{opacity:.55;cursor:default}.signs button[aria-pressed="true"]:disabled{opacity:1}.amount{flex:1;min-width:0}.amount input{width:100%}.units{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}.units button{font-size:14px}.manual-result{margin:18px 0 0}.manual-result .result{margin:0}.manual-placeholder{border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.5;padding:14px;margin:0}.manual-error{color:var(--amber);font-size:13px;line-height:1.5;margin:0}
     .date-tools{display:flex;gap:6px;margin-top:8px}.date-tools button,.calendar{position:relative;display:grid;place-items:center;flex:1;min-height:40px;border:1px solid var(--line);border-radius:6px;background:#0a130d;color:var(--text);font:inherit;font-size:13px}.calendar input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.calendar:focus-within{outline:2px solid var(--green);outline-offset:2px}.end-grid{margin-top:14px}.result-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.result-actions .action{flex:1}.copy-value{width:100%;margin-top:8px;padding:12px;background:#070e09;color:var(--text);font:inherit;border:1px solid var(--line);border-radius:6px}.feedback{font-size:13px;line-height:1.6;color:var(--amber);margin:8px 0 0}.feedback:empty{display:none}.difference-help{align-self:center;color:var(--muted);font-size:13px}.actions{flex-wrap:wrap}
+    .calculation-steps{margin:12px 0 22px;padding:14px;border:1px solid var(--line);border-radius:8px;background:#0a130d;color:var(--text);font-size:13px;line-height:1.8;overflow-wrap:anywhere}.calculation-steps h3{margin:0 0 8px;color:var(--green);font-size:14px;font-weight:400}.calculation-steps p{margin:0 0 8px}.calculation-steps ol{margin:8px 0;padding-left:22px}.calculation-steps li+li{margin-top:12px}.calculation-remaining{color:var(--muted)}.calculation-steps .calculation-total{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line)}.manual-result .calculation-steps{margin-bottom:0}
     [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.manual{padding:16px}.mic{width:108px;height:108px}.signs button{width:44px}}
     @media(prefers-reduced-motion:reduce){.mic.listening{animation:none}}
   </style>
@@ -78,7 +79,7 @@
         <p id="manualFeedback" class="feedback" role="status"></p><input id="manualCopyValue" class="copy-value" readonly hidden aria-label="복사할 수동 계산 결과">
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.9 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.10 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -139,7 +140,7 @@
           const minutes=(end-start)/60000;
           const elapsed=elapsedHHMM(minutes);
           setResult('manual',{text:elapsed});
-          manualResult.innerHTML=banner('ELAPSED / 경과시간 · hhmm',elapsed,`${durationText(minutes)} · 총 ${minutes.toLocaleString('ko-KR')}분<br>${display(end)} − ${display(start)}`);
+          manualResult.innerHTML=banner('ELAPSED / 경과시간 · hhmm',elapsed,`${durationText(minutes)} · 총 ${minutes.toLocaleString('ko-KR')}분<br>${display(end)} − ${display(start)}`)+renderCalculationSteps(start,minutes,1,true);
         }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
         return;
       }
@@ -151,7 +152,7 @@
         setResult('manual',{text:display(result),ms:result});
         const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
         const amountText=manualUnit==='hhmm'?durationText(minutes):`${amount}${unitLabel}`;
-        manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amountText}`);
+        manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amountText}`)+renderCalculationSteps(start,minutes,manualSign);
       }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
     }
     signButtons.forEach(button=>button.addEventListener('click',()=>{
@@ -191,6 +192,45 @@
         manualAmount.value=String(limit/{minutes:1,hours:60,days:1440}[manualUnit]);
       }
       updateManualControls();renderManual();
+    }
+    function readableDuration(minutes){
+      const hours=Math.floor(minutes/60),remainder=minutes%60;
+      return [hours?`${hours}시간`:'',remainder?`${remainder}분`:''].filter(Boolean).join(' ')||'0분';
+    }
+    function buildCalculationSteps(start,minutes,sign=1){
+      const local=new Date(start+9*3600000),clock=local.getUTCHours()*60+local.getUTCMinutes();
+      const steps=[];let cursor=start,remaining=minutes;
+      const append=(kind,amount)=>{
+        const next=cursor+sign*amount*60000;
+        remaining-=amount;steps.push({kind,from:cursor,to:next,minutes:amount,remaining});cursor=next;
+      };
+      // Split at KST midnight, then group complete 24-hour days; at most three steps.
+      const toMidnight=sign>0?(1440-clock)%1440:clock;
+      if(toMidnight>0&&remaining>=toMidnight)append('midnight',toMidnight);
+      const fullDays=Math.floor(remaining/1440);
+      if(fullDays)append('days',fullDays*1440);
+      if(remaining)append('remainder',remaining);
+      return steps;
+    }
+    function renderCalculationSteps(start,minutes,sign=1,difference=false){
+      const steps=buildCalculationSteps(start,minutes,sign);
+      const amount=step=>step.kind==='days'?`${step.minutes/1440}일 (${step.minutes/60}시간)`:readableDuration(step.minutes);
+      let body;
+      if(difference){
+        body=steps.length?'<ol>'+steps.map(step=>`<li>${display(step.from)} → ${display(step.to)}<br>경과: ${amount(step)}</li>`).join('')+'</ol>':'<p>시작 일시와 종료 일시가 같습니다.</p>';
+        body+=`<p class="calculation-total">${steps.length?steps.map(amount).join(' + ')+' = ':''}${readableDuration(minutes)}<br>총 ${minutes.toLocaleString('ko-KR')}분 → HHMM ${elapsedHHMM(minutes)}</p>`;
+      }else{
+        const verb=sign>0?'더합니다':'뺍니다';
+        body=`<p>계산할 기간: ${readableDuration(minutes)}</p><ol>`+steps.map((step,index)=>{
+          let action;
+          if(step.kind==='midnight')action=`먼저 ${sign>0?'다음 날':'같은 날'} 0000까지 ${amount(step)}을 ${verb}.`;
+          else if(step.kind==='days')action=`24시간을 1일로 묶어 ${amount(step)}을 ${verb}.`;
+          else action=`${index?'남은 ':''}${amount(step)}을 ${verb}.`;
+          return `<li>${action}<br>${display(step.from)} → ${display(step.to)}<br><span class="calculation-remaining">남은 기간: ${readableDuration(step.remaining)}</span></li>`;
+        }).join('')+'</ol>';
+        body+=`<p class="calculation-total">최종 결과: ${display(start+sign*minutes*60000)}</p>`;
+      }
+      return `<section class="calculation-steps" aria-label="${difference?'경과시간 계산 과정':'계산 과정'}"><h3>${difference?'경과시간 계산 과정':'계산 과정'}</h3>${body}</section>`;
     }
     function elapsedHHMM(minutes){return `${pad(Math.floor(minutes/60))}${pad(minutes%60)}`;}
     function setResult(kind,result){
@@ -366,10 +406,14 @@
       if(end)html+=section('END / 종료',display(end.ms));
       if(limit!==null)html+=section(sign<0?'SUBTRACT / 빼기':'LIMIT / 기간',durationText(limit));
       if(end){const elapsed=(end.ms-start.ms)/60000;
-        html+=banner('ELAPSED / 경과 · HHMM',elapsedHHMM(elapsed),`${durationText(elapsed)} · 총 ${elapsed.toLocaleString('ko-KR')}분`);
-        if(limit!==null){const left=limit-elapsed;html+=banner(left<0?'EXCEEDED / 제한 초과':left===0?'AT LIMIT / 제한 도달':'REMAINING / 잔여',durationText(left),left<0?'제한 시각을 지났습니다.':left===0?'제한 시각과 일치합니다.':'제한시간까지 남았습니다.',left<0?'bad':left===0?'warn':'');}
+        html+=banner('ELAPSED / 경과 · HHMM',elapsedHHMM(elapsed),`${durationText(elapsed)} · 총 ${elapsed.toLocaleString('ko-KR')}분`)+renderCalculationSteps(start.ms,elapsed,1,true);
+        if(limit!==null){
+          const left=limit-elapsed;
+          const method=left<0?`경과 ${readableDuration(elapsed)} − 제한 ${readableDuration(limit)} = ${readableDuration(-left)} 초과`:`제한 ${readableDuration(limit)} − 경과 ${readableDuration(elapsed)} = ${readableDuration(left)} 남음`;
+          html+=banner(left<0?'EXCEEDED / 제한 초과':left===0?'AT LIMIT / 제한 도달':'REMAINING / 잔여',durationText(left),method,left<0?'bad':left===0?'warn':'');
+        }
       }
-      if(limit!==null)html+=banner(sign<0?'RESULT / 계산 결과':'EXPIRES / 마지막 허용 시각',display(start.ms+sign*limit*60000),`${display(start.ms)} ${sign<0?'−':'+'} ${durationText(limit)}`);
+      if(limit!==null)html+=banner(sign<0?'RESULT / 계산 결과':'EXPIRES / 마지막 허용 시각',display(start.ms+sign*limit*60000),`${display(start.ms)} ${sign<0?'−':'+'} ${durationText(limit)}`)+renderCalculationSteps(start.ms,limit,sign);
       if(dates.some(d=>!d.explicitYear||!d.explicitMonth))html+='<p class="note">※ 생략된 연도·월은 한국 시간의 현재 연월 또는 앞선 날짜를 기준으로 해석했습니다. START/END를 확인해 주세요.</p>';
       return html;
     }

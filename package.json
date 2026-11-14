@@ -1,6 +1,6 @@
 {
   "name": "time-limit-regression",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "description": "Dependency-free regression tests for TIME LIMIT PWA",
   "scripts": {

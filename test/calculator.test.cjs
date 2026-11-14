@@ -247,3 +247,54 @@ test('update draft handles difference mode, corrupt/expired storage and save fai
   }
   assert.equal(loadApp(undefined,{storageBlocked:true}).emit('time-limit:before-update').defaultPrevented,true);
 });
+
+const stepCases=[
+  ['14NOV2026','1010',2320,1,[830,1440,50],'16NOV2026 0050'],
+  ['14NOV2026','1010',2320,-1,[610,1440,270],'12NOV2026 1930'],
+  ['14NOV2026','2350',20,1,[10,10],'15NOV2026 0010'],
+  ['14NOV2026','0010',20,-1,[10,10],'13NOV2026 2350'],
+  ['14NOV2026','0000',1480,1,[1440,40],'15NOV2026 0040'],
+  ['14NOV2026','0000',1480,-1,[1440,40],'12NOV2026 2320'],
+  ['14NOV2026','1010',10,1,[10],'14NOV2026 1020'],
+  ['14NOV2026','1010',830,1,[830],'15NOV2026 0000'],
+  ['14NOV2026','1010',610,-1,[610],'14NOV2026 0000'],
+  ['31DEC2026','2350',1500,1,[10,1440,50],'02JAN2027 0050'],
+  ['01MAR2024','0010',20,-1,[10,10],'29FEB2024 2350'],
+  ['01JAN2026','1010',5256000,1,[830,5254560,610],'30DEC2035 1010']
+];
+for(const [date,time,minutes,sign,parts,end] of stepCases)test(`explanation partitions ${date} ${time} ${sign} ${minutes}`,()=>{
+  const a=loadApp().api,start=a.parseDates(`${date} ${time}`)[0].ms;
+  const steps=a.buildCalculationSteps(start,minutes,sign);
+  assert.deepEqual(Array.from(steps,s=>s.minutes),parts);
+  assert.equal(steps.length<=3,true);assert.equal(a.display(steps.at(-1).to),end);
+  let cursor=start,remaining=minutes;
+  for(const step of steps){
+    assert.equal(step.from,cursor);assert.ok(step.minutes>0);
+    assert.equal((step.to-step.from)/60000,sign*step.minutes);
+    remaining-=step.minutes;assert.equal(step.remaining,remaining);cursor=step.to;
+    if(step.kind==='days'){assert.equal(step.minutes%1440,0);assert.match(a.display(step.from),/0000$/);}
+  }
+  assert.equal(remaining,0);
+});
+test('manual and voice explanations show the requested 1010 + 38h40m example exactly',()=>{
+  const app=loadApp();const manual=app.manual('14NOV2026','1010','3840','hhmm');
+  for(const expected of ['계산 과정','13시간 50분','15NOV2026 0000','남은 기간: 24시간 50분','1일 (24시간)','16NOV2026 0000','남은 기간: 50분','최종 결과: 16NOV2026 0050'])assert.ok(manual.includes(expected),expected);
+  app.el('input').value='2026년 11월 14일 10시 10분부터 38시간 40분';app.api.render();
+  assert.ok(app.el('details').innerHTML.includes('최종 결과: 16NOV2026 0050'));
+  assert.ok(app.el('manualResult').innerHTML.includes('남은 기간: 24시간 50분'));
+  app.el('manualTime').value='2500';app.el('manualTime').fire('input');assert.doesNotMatch(app.el('manualResult').innerHTML,/calculation-steps/);
+});
+test('subtraction and zero/nonzero elapsed time have distinct explanations',()=>{
+  const app=loadApp();assert.match(app.manual('14NOV2026','1010','3840','hhmm',-1),/같은 날 0000까지 10시간 10분을 뺍니다/);
+  assert.match(app.el('manualResult').innerHTML,/최종 결과: 12NOV2026 1930/);
+  setEnd(app,'16NOV2026 0050');app.manual('14NOV2026','1010','','difference');
+  assert.match(app.el('manualResult').innerHTML,/13시간 50분 \+ 1일 \(24시간\) \+ 50분 = 38시간 40분/);
+  assert.match(app.el('manualResult').innerHTML,/HHMM 3840/);
+  setEnd(app,'14NOV2026 1010');app.el('endTime').fire('input');assert.match(app.el('manualResult').innerHTML,/시작 일시와 종료 일시가 같습니다/);assert.match(app.el('manualResult').innerHTML,/HHMM 0000/);
+});
+test('voice remaining and exceeded results explain the correct subtraction order',()=>{
+  const a=loadApp().api,raw='14NOV2026 1010부터 16NOV2026 0050까지 ';
+  assert.match(a.calculate(raw+'40시간'),/제한 40시간 − 경과 38시간 40분 = 1시간 20분 남음/);
+  assert.match(a.calculate(raw+'38시간 40분'),/제한 38시간 40분 − 경과 38시간 40분 = 0분 남음/);
+  assert.match(a.calculate(raw+'38시간'),/경과 38시간 40분 − 제한 38시간 = 40분 초과/);
+});

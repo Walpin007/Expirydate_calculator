@@ -2,6 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { loadApp } = require('./harness.cjs');
+function setEnd(app,text){const [date='',time='']=text.split(' ');app.el('endDate').value=date;app.el('endTime').value=time;}
 
 const arithmetic = [
   ['minutes add', '27SEP2026', '1530', '45', 'minutes', 1, '27SEP2026 1615'],
@@ -51,19 +52,19 @@ for (const [unit, value, over] of [['minutes','5256000','5256001'],['hours','876
 }
 for (const [end, expected] of [['28SEP2026 1815','2645'],['27SEP2026 1530','0000'],['27SEP2026 1531','0001'],['27SEP2026 1629','0059'],['27SEP2026 1630','0100'],['28SEP2026 1530','2400'],['01OCT2026 1935','10005']]) {
   test(`elapsed HHMM ${expected}`, () => {
-    const app=loadApp();app.el('manualEnd').value=end;
+    const app=loadApp();setEnd(app,end);
     assert.match(app.manual('27SEP2026','1530','','difference'), new RegExp(`<div class="value">${expected}</div>`));
   });
 }
 test('difference before start, missing/invalid end and >10-year comparison policy', () => {
   const app=loadApp(); app.manual('27SEP2026','1530','','difference');
   assert.match(app.el('manualResult').innerHTML,/종료 일시를 입력/);
-  for(const end of ['27SEP2026 1529','29FEB2026 1200','28SEP2026 2460','bad']) {
-    app.el('manualEnd').value=end; app.el('manualEnd').fire('input');
+  for(const end of ['27SEP2026 1529','29FEB2026 1200','28SEP2026 2460','bad 1200']) {
+    setEnd(app,end); app.el('endTime').fire('input');
     assert.match(app.el('manualResult').innerHTML,/manual-error/);
   }
   // Existing difference mode has no 10-year limit; only date input bounds apply.
-  app.el('manualEnd').value='27SEP2037 1530'; app.el('manualEnd').fire('input');
+  setEnd(app,'27SEP2037 1530'); app.el('endTime').fire('input');
   assert.match(app.el('manualResult').innerHTML,/9643200/);
 });
 test('HHMM controls, live input and sign preservation around difference mode', () => {
@@ -157,8 +158,7 @@ test('voice max period, combined limit and missing duration',()=>{
   assert.match(a.calculate('01JAN2026 0000부터 3650일'),/30DEC2035 0000/);
   assert.throws(()=>a.calculate('01JAN2026 0000부터 3650일 1분'));
   assert.throws(()=>a.calculate('01JAN2026 0000'));
-  // Written-out Korean numbers are not normalized by the current parser.
-  assert.throws(()=>a.calculate('이천이십육년 구월 이십칠일 오후 세시부터 두시간'));
+  assert.match(a.calculate('이천이십육년 구월 이십칠일 오후 세시부터 두시간'),/27SEP2026 1700/);
 });
 for(const raw of ['', '날짜 없음 40시간', '2026년 2월 29일 1시부터 1시간','9월 27일 24시부터 1시간','9월 27일 15시 60분부터 1시간','9월 27일 오전 0시부터 1시간','9월 27일 오후 13시부터 1시간','9월 27일 30분부터 1시간','9월 27일 15시부터 26일 15시까지','9월 27일 1시 28일 1시 29일 1시'])test(`invalid voice date: ${raw}`,()=>assert.throws(()=>loadApp().api.calculate(raw)));
 
@@ -168,4 +168,82 @@ test('missing SpeechRecognition falls back to typed input without a microphone',
   assert.equal(app.el('output').hidden,false);assert.equal(app.el('intro').hidden,true);
   assert.match(app.el('details').innerHTML,/음성 인식이 제공되지 않습니다/);
   app.el('clear').fire('click');assert.equal(app.el('output').hidden,true);
+});
+
+const naturalVoice=[
+  ['오늘 15시에서 2시간 빼기','14NOV2026 1300',-1],
+  ['오늘 15시부터 2시간 전','14NOV2026 1300',-1],
+  ['오늘 오후 세 시 반부터 두 시간','14NOV2026 1730',1],
+  ['오늘 오후 세시 반에서 두시간 빼 주세요','14NOV2026 1330',-1],
+  ['오늘 오후 세 시부터 두 시간 반','14NOV2026 1730',1],
+  ['오늘 15시부터 반 시간','14NOV2026 1530',1],
+  ['내일 오전 열한 시부터 스물두 시간','16NOV2026 0900',1],
+  ['어제 23시부터 두 시간','14NOV2026 0100',1],
+  ['모레 0시에서 삼십 분 전','15NOV2026 2330',-1],
+  ['지금부터 두 시간','14NOV2026 1500',1],
+  ['오늘 지금에서 삼십 분 빼기','14NOV2026 1230',-1],
+  ['이천이십육년 십일월 십사일 오후 세시부터 두시간','14NOV2026 1700',1]
+];
+for(const [raw,expected,sign] of naturalVoice)test(`natural speech: ${raw}`,()=>{
+  const app=loadApp('2026-11-14T04:00:59Z');app.el('input').value=raw;app.api.render();
+  assert.match(app.el('details').innerHTML,new RegExp(expected));
+  assert.match(app.el('manualResult').innerHTML,new RegExp(expected));
+  assert.equal(app.signs.find(b=>b.dataset.sign===String(sign)).attributes['aria-pressed'],'true');
+});
+for(const raw of ['오늘 15시부터 한 달','오늘 15시에서 2시간 전후','오늘 15시부터 2시간 더하기 30분 빼기','오늘 오후 3시 반쯤부터 2시간','오늘 15시부터 2시간 반나절','오늘 15시부터 2시간 말고 3시간','오늘 15시부터 2시간 20초'])test(`reject unparsed or ambiguous speech: ${raw}`,()=>{
+  const app=loadApp();assert.throws(()=>app.api.calculate(raw));
+});
+test('partial voice inputs fill the form and remove old results without inventing a clock',()=>{
+  const app=loadApp('2026-11-14T04:00:00Z');app.manual('01JAN2026','1200','2','hours');
+  for(const [raw,date,time] of [['오늘 15시','14NOV2026','1500'],['내일','15NOV2026',''],['모레 날짜','16NOV2026',''],['지금','14NOV2026','1300']]){
+    app.el('input').value=raw;app.api.render();
+    assert.equal(app.el('manualDate').value,date);assert.equal(app.el('manualTime').value,time);
+    assert.equal(app.el('manualAmount').value,'');assert.equal(app.el('manualActions').hidden,true);assert.equal(app.el('voiceActions').hidden,true);
+  }
+});
+test('relative dates cross leap days and new year in KST and remain fixed after parsing',()=>{
+  for(const [now,raw,date] of [['2026-12-31T14:59:59Z','내일 0시부터 1분','01JAN2027 0001'],['2024-02-28T15:00:00Z','어제 23시부터 두 시간','29FEB2024 0100']])assert.match(loadApp(now).api.calculate(raw),new RegExp(date));
+  const app=loadApp('2026-12-31T14:59:59Z'),parsed=app.api.analyzeVoice('지금부터 두 시간');
+  app.setNow('2026-12-31T15:01:00Z');app.api.syncManualFromVoice('',parsed);
+  assert.equal(app.el('manualDate').value,'31DEC2026');assert.equal(app.el('manualTime').value,'2359');
+  assert.match(app.api.calculate('',parsed),/01JAN2027 0159/);
+});
+test('calendar and today controls preserve DDMMMYYYY and the typed clock',()=>{
+  const app=loadApp('2026-11-14T04:00:00Z');app.manual('14NOV2026','1530','2','hours');
+  app.el('startCalendar').value='2024-02-29';app.el('startCalendar').fire('change');
+  assert.equal(app.el('manualDate').value,'29FEB2024');assert.match(app.el('manualResult').innerHTML,/29FEB2024 1730/);
+  app.setNow('2026-11-14T15:01:00Z');app.el('startToday').fire('click');
+  assert.equal(app.el('manualDate').value,'15NOV2026');assert.equal(app.el('manualTime').value,'1530');
+  app.unit('difference');app.el('endCalendar').value='2026-11-16';app.el('endCalendar').fire('change');app.el('endTime').value='1800';app.el('endTime').fire('input');
+  assert.equal(app.el('endDate').value,'16NOV2026');assert.match(app.el('manualResult').innerHTML,/>2630</);
+  app.el('endToday').fire('click');assert.match(app.el('manualResult').innerHTML,/>0230</);
+});
+test('copy results, select fallback, chain arithmetic and hide stale actions',async()=>{
+  const app=loadApp();app.manual('27SEP2026','1530','0130','hhmm');
+  await app.el('copyManual').fire('click');assert.deepEqual(app.copied,['27SEP2026 1700']);
+  app.el('useManual').fire('click');assert.equal(app.el('manualTime').value,'1700');assert.equal(app.el('manualAmount').value,'');assert.equal(app.el('manualActions').hidden,true);
+  app.el('manualAmount').value='0100';app.el('manualAmount').fire('input');assert.match(app.el('manualResult').innerHTML,/27SEP2026 1800/);
+  const fallback=loadApp(undefined,{clipboardBlocked:true});fallback.manual('27SEP2026','1530','1','hours');await fallback.el('copyManual').fire('click');
+  assert.equal(fallback.el('manualCopyValue').hidden,false);assert.equal(fallback.el('manualCopyValue').value,'27SEP2026 1630');
+  app.el('input').value='오늘 15시에서 두 시간 빼기';app.api.render();await app.el('copyVoice').fire('click');assert.equal(app.copied.at(-1),'28SEP2026 1300');
+  app.el('useVoice').fire('click');assert.equal(app.el('manualTime').value,'1300');assert.equal(app.el('manualAmount').value,'');
+  app.el('input').value='오늘 13시부터 오늘 18시 45분까지';app.api.render();await app.el('copyVoice').fire('click');
+  assert.equal(app.copied.at(-1),'0545');assert.equal(app.el('useVoice').hidden,true);assert.equal(app.el('useManual').hidden,true);
+});
+test('update draft restores fields once, preserving 지금 instead of recalculating at reload',()=>{
+  const app=loadApp('2026-11-14T04:00:00Z');app.el('input').value='지금부터 두시간';app.api.render();app.el('output').hidden=false;
+  assert.equal(app.emit('time-limit:before-update').defaultPrevented,false);assert.equal(app.storage.size,1);
+  const restored=loadApp('2026-11-14T04:05:00Z',{storage:app.storage});
+  assert.equal(restored.el('manualTime').value,'1300');assert.equal(restored.el('manualAmount').value,'2');assert.match(restored.el('manualResult').innerHTML,/14NOV2026 1500/);
+  assert.equal(restored.el('input').value,'지금부터 두시간');assert.match(restored.el('manualFeedback').textContent,/복원/);assert.equal(restored.storage.size,0);
+  const fresh=loadApp('2026-11-14T04:06:00Z',{storage:restored.storage});assert.equal(fresh.el('manualTime').value,'');
+});
+test('update draft handles difference mode, corrupt/expired storage and save failure',()=>{
+  const app=loadApp('2026-11-14T04:00:00Z');setEnd(app,'15NOV2026 1630');app.manual('14NOV2026','1530','','difference');app.emit('time-limit:before-update');
+  const key=[...app.storage.keys()][0],saved=app.storage.get(key);
+  const restored=loadApp('2026-11-14T04:00:01Z',{storage:app.storage});assert.equal(restored.el('endDate').value,'15NOV2026');assert.equal(restored.el('endTime').value,'1630');assert.match(restored.el('manualResult').innerHTML,/>2500</);
+  for(const value of ['invalid',saved]){
+    const storage=new Map([[key,value]]),fresh=loadApp('2026-11-14T05:00:00Z',{storage});assert.equal(fresh.el('manualTime').value,'');
+  }
+  assert.equal(loadApp(undefined,{storageBlocked:true}).emit('time-limit:before-update').defaultPrevented,true);
 });

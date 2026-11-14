@@ -8,7 +8,7 @@ const { ROOT, element } = require('./harness.cjs');
 const BASE='https://example.test/Expirydate_calculator/';
 function worker() {
   const handlers={}, stores=new Map(), deleted=[];let claimed=0,skipped=0;
-  const cacheName='time-limit:'+BASE+':v0.1.8';
+  const cacheName='time-limit:'+BASE+':v0.1.9';
   const cache={ entries:new Map(), async addAll(requests){this.requests=requests;},
     async put(key,res){this.entries.set(key,res);}, async match(key){return this.entries.get(key)?.clone();} };
   stores.set(cacheName,cache);
@@ -53,16 +53,16 @@ test('service worker ignores non-GET, external and unrelated requests',async()=>
 test('manifest identity, relative paths and release version remain consistent',()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'manifest.webmanifest'),'utf8'));
   assert.equal(manifest.id,'./');assert.equal(manifest.scope,'./');assert.equal(manifest.start_url,'./');assert.equal(manifest.display,'standalone');
-  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.8 · PWA/);
-  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.8'/);
+  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.9 · PWA/);
+  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.9'/);
   assert.match(html,/<script src="\.\/pwa.js" defer>/);
 });
 function pwa(secure=true) {
   const status=element(),button=element({hidden:true}),events={},windowEvents={},messages=[];let reloads=0,updates=0,registered;
   const reg={waiting:{postMessage(m){messages.push(m);}},addEventListener(){},update(){updates++;return Promise.resolve();}};
   const sw={controller:{},ready:Promise.resolve(),addEventListener(k,fn){events[k]=fn;},register(url,options){registered={url,options};return Promise.resolve(reg);}};
-  const context=vm.createContext({document:{getElementById:id=>id==='pwaStatus'?status:button,addEventListener(k,fn){events[k]=fn;},visibilityState:'visible'},
-    navigator:{serviceWorker:sw,onLine:true},window:{isSecureContext:secure,addEventListener(k,fn){windowEvents[k]=fn;}},location:{protocol:secure?'https:':'file:',reload(){reloads++;}}});
+  const context=vm.createContext({CustomEvent:class {constructor(type){this.type=type;this.defaultPrevented=false;}preventDefault(){this.defaultPrevented=true;}},document:{getElementById:id=>id==='pwaStatus'?status:button,addEventListener(k,fn){events[k]=fn;},visibilityState:'visible'},
+    navigator:{serviceWorker:sw,onLine:true},window:{isSecureContext:secure,dispatchEvent(event){windowEvents[event.type]?.(event);return !event.defaultPrevented;},addEventListener(k,fn){windowEvents[k]=fn;}},location:{protocol:secure?'https:':'file:',reload(){reloads++;}}});
   vm.runInContext(fs.readFileSync(path.join(ROOT,'pwa.js'),'utf8'),context);
   return {status,button,events,windowEvents,messages,context,get registered(){return registered;},get reloads(){return reloads;},get updates(){return updates;}};
 }
@@ -77,4 +77,18 @@ test('PWA registration, ready/offline status and deliberate update reload',async
 });
 test('PWA file / insecure environment gives HTTPS guidance',()=>{
   const p=pwa(false);assert.match(p.status.textContent,/HTTPS/);assert.equal(p.registered,undefined);
+});
+test('PWA preserves input before update and again before reload; failed storage prevents reload',async()=>{
+  const p=pwa();await new Promise(resolve=>setImmediate(resolve));let saves=0;
+  p.windowEvents['time-limit:before-update']=()=>{saves++;};
+  p.button.fire('click');assert.equal(saves,1);p.events.controllerchange();assert.equal(saves,2);assert.equal(p.reloads,1);
+  const denied=pwa();await new Promise(resolve=>setImmediate(resolve));
+  denied.windowEvents['time-limit:before-update']=event=>event.preventDefault();denied.button.fire('click');
+  assert.equal(denied.messages.length,0);assert.equal(denied.reloads,0);assert.match(denied.status.textContent,/입력 보존 실패/);
+});
+test('PWA can retry reload when the second draft save fails',async()=>{
+  const p=pwa();await new Promise(resolve=>setImmediate(resolve));
+  p.button.fire('click');p.windowEvents['time-limit:before-update']=event=>event.preventDefault();p.events.controllerchange();
+  assert.equal(p.reloads,0);assert.equal(p.button.disabled,false);assert.match(p.button.textContent,/다시 열기/);
+  p.windowEvents['time-limit:before-update']=()=>{};p.button.fire('click');assert.equal(p.reloads,1);
 });

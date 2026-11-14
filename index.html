@@ -14,7 +14,7 @@
   <style>
     :root{color-scheme:dark;--bg:#070b09;--panel:#101914;--line:#365441;--text:#e9f5ed;--muted:#bfd1c3;--green:#b8ffbf;--amber:#ffcc76;--red:#ff9a91}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{min-height:100dvh;margin:0;background:radial-gradient(ellipse at 50% 42%,#122219 0,#070b09 62%);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace}
-    button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+    button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:3px}
     .shell{width:min(100%,660px);min-height:100dvh;margin:auto;padding:calc(env(safe-area-inset-top) + 24px) 22px calc(env(safe-area-inset-bottom) + 26px);display:flex;flex-direction:column}
     .top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:.12em}.live{color:var(--green);font-weight:400}.live:before{content:"■ ";font-size:9px}
     main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-top:clamp(24px,5vh,52px)}.intro{text-align:center}.mic{display:grid;place-items:center;width:116px;height:116px;margin:0 auto 18px;border:2px solid var(--green);border-radius:20px;background:#16301c;color:var(--green);box-shadow:0 0 0 9px #a4ffa80c,0 0 52px #72e67c27;transition:transform .15s,background .2s}.mic:active{transform:scale(.96)}.mic svg{width:56px;height:56px;fill:currentColor;shape-rendering:crispEdges}.mic.listening{background:#275633;animation:pulse 1.2s infinite}@keyframes pulse{50%{box-shadow:0 0 0 17px #a4ffa81a,0 0 72px #72e67c55}}
@@ -22,6 +22,7 @@
     .terminal{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px 20px 24px;box-shadow:0 20px 60px #0007}.head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px;font-size:12px;letter-spacing:.07em;color:var(--green)}.section{margin:0 0 23px}.label{font-size:12px;letter-spacing:.045em;color:var(--muted);margin:0 0 10px}.value{font-size:clamp(19px,5.1vw,26px);font-weight:400;line-height:1.4;letter-spacing:0;overflow-wrap:anywhere}.result{padding:18px 16px;background:#1b3323;border-left:4px solid var(--green);margin:5px 0 22px}.result .label{color:#d9e9dc}.result .value{font-size:clamp(22px,6.9vw,30px);font-weight:400;color:var(--green)}.result.warn{background:#382b1e;border-color:var(--amber)}.result.warn .value{color:var(--amber)}.result.bad{background:#3a2020;border-color:var(--red)}.result.bad .value{color:var(--red)}.secondary{font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px}.note{font-size:12px;line-height:1.6;color:var(--amber);border-top:1px solid var(--line);padding-top:15px;margin:4px 0 0}.error{color:var(--amber);font-size:14px;line-height:1.7}
     textarea{display:block;width:100%;min-height:90px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#070e09;color:var(--text);padding:13px;line-height:1.6;font-size:16px}.actions{display:flex;gap:10px;margin-top:20px}.action{min-height:48px;padding:10px 16px;border:1px solid var(--green);border-radius:7px;background:#183621;color:var(--green);font-size:13px;font-weight:500}.action.alt{border-color:var(--line);background:transparent;color:var(--text)}.foot{text-align:center;color:#9db6a3;font-size:11px;line-height:1.6;letter-spacing:.025em;margin-top:22px}.version{display:block;margin-top:10px;color:#789380;font-size:10px}
     .manual{margin-top:26px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.manual .head{margin-bottom:18px}.manual-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}.field{display:block;min-width:0}.field span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.field input{width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#070e09;color:var(--text);font:inherit;font-size:16px;color-scheme:dark}.manual-row{display:flex;align-items:stretch;gap:10px;margin-top:18px}.signs{display:flex;flex:none;align-self:flex-end;gap:4px}.signs button,.units button{min-height:48px;border:1px solid var(--line);border-radius:7px;background:#0a130d;color:var(--text);font-size:16px}.signs button{width:48px}.signs button[aria-pressed="true"],.units button[aria-pressed="true"]{background:#1d3b25;border-color:var(--green);color:var(--green)}.signs button:disabled{opacity:.55;cursor:default}.signs button[aria-pressed="true"]:disabled{opacity:1}.amount{flex:1;min-width:0}.amount input{width:100%}.units{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}.units button{font-size:14px}.manual-result{margin:18px 0 0}.manual-result .result{margin:0}.manual-placeholder{border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:13px;line-height:1.5;padding:14px;margin:0}.manual-error{color:var(--amber);font-size:13px;line-height:1.5;margin:0}
+    .date-tools{display:flex;gap:6px;margin-top:8px}.date-tools button,.calendar{position:relative;display:grid;place-items:center;flex:1;min-height:40px;border:1px solid var(--line);border-radius:6px;background:#0a130d;color:var(--text);font:inherit;font-size:13px}.calendar input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.calendar:focus-within{outline:2px solid var(--green);outline-offset:2px}.end-grid{margin-top:14px}.result-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.result-actions .action{flex:1}.copy-value{width:100%;margin-top:8px;padding:12px;background:#070e09;color:var(--text);font:inherit;border:1px solid var(--line);border-radius:6px}.feedback{font-size:13px;line-height:1.6;color:var(--amber);margin:8px 0 0}.feedback:empty{display:none}.difference-help{align-self:center;color:var(--muted);font-size:13px}.actions{flex-wrap:wrap}
     [hidden]{display:none!important}@media(max-width:390px){.shell{padding-left:16px;padding-right:16px}.terminal{padding:17px 15px}.manual{padding:16px}.mic{width:108px;height:108px}.signs button{width:44px}}
     @media(prefers-reduced-motion:reduce){.mic.listening{animation:none}}
   </style>
@@ -35,19 +36,21 @@
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M26 6h12v4h4v22h-4v4H26v-4h-4V10h4zm-4 22h-6v8h4v4h8v4h-8v4h24v-4h-8v-4h8v-4h4v-8h-6v8H22z"/></svg>
         </button>
         <h1>TIME LIMIT</h1>
-        <p id="hint" class="hint">버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”</p>
+        <p id="hint" class="hint">버튼을 누르고 시간 계산을 말씀해 주세요.<br>“오늘 오후 세 시 반부터 두 시간”</p>
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </section>
       <section id="output" class="terminal" hidden aria-label="계산 결과">
         <div class="head"><span>&gt; TIME LIMIT</span><span>KST / UTC+09</span></div>
         <div class="section"><label class="label" for="input">&gt; RECOGNIZED INPUT / 탭하여 수정</label><textarea id="input" spellcheck="false" autocomplete="off" placeholder="예: 27SEP2026 1530부터 40시간"></textarea></div>
         <div id="details" aria-live="polite"></div>
+        <div id="voiceActions" class="result-actions" hidden><button id="copyVoice" class="action" type="button">결과 복사</button><button id="useVoice" class="action alt" type="button">결과로 추가 계산</button></div>
+        <p id="voiceFeedback" class="feedback" role="status"></p><input id="voiceCopyValue" class="copy-value" readonly hidden aria-label="복사할 음성 계산 결과">
         <div class="actions"><button id="again" class="action" type="button">● 다시 말하기</button><button id="clear" class="action alt" type="button">처음으로</button></div>
       </section>
       <section class="manual" aria-label="수동 시간 계산">
         <div class="head"><span>&gt; MANUAL INPUT / 직접 입력</span><span>KST</span></div>
         <div class="manual-grid">
-          <label class="field" for="manualDate"><span>날짜 · DDMMMYYYY</span><input id="manualDate" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="기준 날짜, 예: 27SEP2026" required></label>
+          <div><label class="field" for="manualDate"><span>날짜 · DDMMMYYYY</span><input id="manualDate" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="기준 날짜, 예: 27SEP2026" required></label><div class="date-tools"><button id="startToday" type="button">오늘</button><label class="calendar">달력<input id="startCalendar" type="date" min="1900-01-01" max="2100-12-31" aria-label="기준 날짜 달력 선택"></label></div></div>
           <label class="field" for="manualTime"><span>시각 · HHMM (24H)</span><input id="manualTime" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="예: 1530" aria-label="기준 시각, 24시간제 네 자리" required></label>
         </div>
         <div class="manual-row">
@@ -56,7 +59,11 @@
             <button type="button" data-sign="-1" aria-pressed="false" aria-label="빼기">−</button>
           </div>
           <label id="amountField" class="field amount" for="manualAmount"><span id="amountLabel">계산할 숫자</span><input id="manualAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="숫자 입력"></label>
-          <label id="endField" class="field amount" for="manualEnd" hidden><span>종료 일시 · DDMMMYYYY hhmm</span><input id="manualEnd" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="14" placeholder="예: 28SEP2026 1815" aria-label="종료 일시, 예: 28SEP2026 1815"></label>
+          <span id="differenceHelp" class="difference-help" hidden>종료 일시 − 기준 일시</span>
+        </div>
+        <div id="endField" class="manual-grid end-grid" hidden>
+          <div><label class="field" for="endDate"><span>종료 날짜 · DDMMMYYYY</span><input id="endDate" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="예: 28SEP2026"></label><div class="date-tools"><button id="endToday" type="button">오늘</button><label class="calendar">달력<input id="endCalendar" type="date" min="1900-01-01" max="2100-12-31" aria-label="종료 날짜 달력 선택"></label></div></div>
+          <label class="field" for="endTime"><span>종료 시각 · HHMM (24H)</span><input id="endTime" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" placeholder="예: 1815"></label>
         </div>
         <div class="units" role="group" aria-label="계산 단위">
           <button type="button" data-unit="minutes" aria-pressed="false">분</button>
@@ -67,9 +74,11 @@
         </div>
         <p id="hhmmHelp" class="secondary" hidden>기간 입력: 0130 = 1시간 30분 · 2645 = 26시간 45분<br>4자리 이상 숫자, 마지막 두 자리는 분(00~59)입니다.</p>
         <div id="manualResult" class="manual-result" role="status" aria-live="polite"><p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p></div>
+        <div id="manualActions" class="result-actions" hidden><button id="copyManual" class="action" type="button">결과 복사</button><button id="useManual" class="action alt" type="button">결과로 추가 계산</button></div>
+        <p id="manualFeedback" class="feedback" role="status"></p><input id="manualCopyValue" class="copy-value" readonly hidden aria-label="복사할 수동 계산 결과">
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.8 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.9 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -85,8 +94,9 @@
     const durationText=mins=>`${Math.floor(Math.abs(mins)/60)}시간 ${pad(Math.abs(mins)%60)}분`;
     const section=(name,value,sub='')=>`<div class="section"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
     const banner=(name,value,sub='',cls='')=>`<div class="result ${cls}"><div class="label">&gt; ${name}</div><div class="value">${value}</div>${sub?`<div class="secondary">${sub}</div>`:''}</div>`;
-    const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),manualEnd=$('manualEnd'),manualResult=$('manualResult');
+    const manualDate=$('manualDate'),manualTime=$('manualTime'),manualAmount=$('manualAmount'),endDate=$('endDate'),endTime=$('endTime'),manualResult=$('manualResult');
     const signButtons=[...document.querySelectorAll('[data-sign]')],unitButtons=[...document.querySelectorAll('[data-unit]')];
+    const results={manual:null,voice:null};
     const kstToday=new Date(Date.now()+9*3600000);
     manualDate.value=`${pad(kstToday.getUTCDate())}${MONTHS[kstToday.getUTCMonth()]}${kstToday.getUTCFullYear()}`;
     manualTime.value='';
@@ -95,6 +105,7 @@
       const difference=manualUnit==='difference';
       $('amountField').hidden=difference;
       $('endField').hidden=!difference;
+      $('differenceHelp').hidden=!difference;
       const hhmm=manualUnit==='hhmm';
       $('amountLabel').textContent=hhmm?'계산할 기간 · HHMM':'계산할 숫자';
       $('hhmmHelp').hidden=!hhmm;
@@ -106,6 +117,8 @@
       unitButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.unit===manualUnit)));
     }
     function renderManual(){
+      setResult('manual',null);
+      syncCalendars();
       if(!manualUnit){manualResult.innerHTML='<p class="manual-placeholder">계산 결과가 여기에 표시됩니다. 숫자를 입력한 뒤 단위를 누르세요.</p>';return}
       const date=/^(\d{2})([A-Z]{3})(\d{4})$/.exec(manualDate.value.trim().toUpperCase());
       const time=/^([01]\d|2[0-3])([0-5]\d)$/.exec(manualTime.value.trim());
@@ -116,15 +129,16 @@
       try{start=kst(+date[3],MONTHS.indexOf(date[2])+1,+date[1],+time[1],+time[2])}
       catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`;return}
       if(manualUnit==='difference'){
-        const endText=manualEnd.value.trim().toUpperCase();
-        if(!endText){manualResult.innerHTML='<p class="manual-placeholder">종료 일시를 입력하면 경과시간이 여기에 표시됩니다.</p>';return}
+        const endText=`${endDate.value.trim()} ${endTime.value.trim()}`.trim().toUpperCase();
+        if(!endDate.value.trim()||!endTime.value.trim()){manualResult.innerHTML='<p class="manual-placeholder">종료 일시를 입력하면 경과시간이 여기에 표시됩니다.</p>';return}
         const endParts=/^(\d{2})([A-Z]{3})(\d{4})\s+([01]\d|2[0-3])([0-5]\d)$/.exec(endText);
         if(!endParts||!MONTHS.includes(endParts[2])){manualResult.innerHTML='<p class="manual-error">종료 일시는 28SEP2026 1815처럼 입력해 주세요.</p>';return}
         try{
           const end=kst(+endParts[3],MONTHS.indexOf(endParts[2])+1,+endParts[1],+endParts[4],+endParts[5]);
           if(end<start){manualResult.innerHTML='<p class="manual-error">종료 일시가 기준 일시보다 빠릅니다. 두 날짜를 확인해 주세요.</p>';return}
           const minutes=(end-start)/60000;
-          const elapsed=`${pad(Math.floor(minutes/60))}${pad(minutes%60)}`;
+          const elapsed=elapsedHHMM(minutes);
+          setResult('manual',{text:elapsed});
           manualResult.innerHTML=banner('ELAPSED / 경과시간 · hhmm',elapsed,`${durationText(minutes)} · 총 ${minutes.toLocaleString('ko-KR')}분<br>${display(end)} − ${display(start)}`);
         }catch(e){manualResult.innerHTML=`<p class="manual-error">${e.message}</p>`}
         return;
@@ -134,6 +148,7 @@
       try{
         const minutes=parseManualDuration(amount,manualUnit);
         const result=start+manualSign*minutes*60000;
+        setResult('manual',{text:display(result),ms:result});
         const unitLabel={minutes:'분',hours:'시간',days:'일'}[manualUnit];
         const amountText=manualUnit==='hhmm'?durationText(minutes):`${amount}${unitLabel}`;
         manualResult.innerHTML=banner('RESULT / 계산 결과',display(result),`${display(start)} ${manualSign===1?'+':'−'} ${amountText}`);
@@ -156,32 +171,67 @@
     manualDate.addEventListener('input',()=>{manualDate.value=manualDate.value.toUpperCase();renderManual()});
     [manualTime,manualAmount].forEach(field=>field.addEventListener('input',renderManual));
     [manualDate,manualTime,manualAmount].forEach(field=>field.addEventListener('change',renderManual));
-    manualEnd.addEventListener('input',()=>{manualEnd.value=manualEnd.value.toUpperCase();renderManual()});
-    manualEnd.addEventListener('change',renderManual);
-    function syncManualFromVoice(raw){
-      const dates=parseDates(raw);
-      const limit=parseDuration(raw,dates);
-      const start=dates[0],local=new Date(start.ms+9*3600000);
-      manualDate.value=`${pad(local.getUTCDate())}${MONTHS[local.getUTCMonth()]}${local.getUTCFullYear()}`;
-      manualTime.value=`${pad(local.getUTCHours())}${pad(local.getUTCMinutes())}`;
-      if(dates.length===2){
-        const end=new Date(dates[1].ms+9*3600000);
-        manualEnd.value=`${pad(end.getUTCDate())}${MONTHS[end.getUTCMonth()]}${end.getUTCFullYear()} ${pad(end.getUTCHours())}${pad(end.getUTCMinutes())}`;
-        manualUnit='difference';manualSign=-1;updateManualControls();renderManual();
-        return;
+    endDate.addEventListener('input',()=>{endDate.value=endDate.value.toUpperCase();renderManual()});
+    endTime.addEventListener('input',renderManual);
+    [endDate,endTime].forEach(field=>field.addEventListener('change',renderManual));
+    function syncManualFromVoice(raw,parsed=analyzeVoice(raw)){
+      const {dates,limit,sign}=parsed,start=dates[0];
+      manualDate.value=`${pad(start.d)}${MONTHS[start.month-1]}${start.year}`;
+      manualTime.value=start.ms===null?'':display(start.ms).slice(-4);
+      endDate.value=dates[1]?display(dates[1].ms).slice(0,9):'';
+      endTime.value=dates[1]?display(dates[1].ms).slice(-4):'';
+      manualSign=sign;previousSign=sign;
+      if(dates.length===2){manualUnit='difference';manualSign=-1;}
+      else if(limit===null){manualAmount.value='';manualUnit=null;}
+      else{
+        const clean=withoutDates(parsed.text,dates);
+        const hasMinutes=/\d+\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/i.test(clean)||/반/.test(clean);
+        const hasHours=/\d+\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/i.test(clean);
+        manualUnit=hasMinutes?'minutes':hasHours?'hours':'days';
+        manualAmount.value=String(limit/{minutes:1,hours:60,days:1440}[manualUnit]);
       }
-      manualSign=1;previousSign=1;
-      if(limit===null){
-        manualAmount.value='';manualUnit=null;updateManualControls();renderManual();
-        return;
+      updateManualControls();renderManual();
+    }
+    function elapsedHHMM(minutes){return `${pad(Math.floor(minutes/60))}${pad(minutes%60)}`;}
+    function setResult(kind,result){
+      results[kind]=result;
+      $(kind+'Actions').hidden=!result;
+      $('use'+(kind==='manual'?'Manual':'Voice')).hidden=!result||!Number.isFinite(result.ms);
+      $(kind+'Feedback').textContent='';$(kind+'CopyValue').hidden=true;
+    }
+    async function copyResult(kind){
+      const result=results[kind];if(!result)return;
+      try{await navigator.clipboard.writeText(result.text);$(kind+'Feedback').textContent='결과를 복사했습니다.';}
+      catch{const field=$(kind+'CopyValue');field.value=result.text;field.hidden=false;field.focus();field.select();$(kind+'Feedback').textContent='아래 결과를 길게 눌러 복사해 주세요.';}
+    }
+    function useResult(kind){
+      const result=results[kind];if(!result||!Number.isFinite(result.ms))return;
+      const formatted=display(result.ms);manualDate.value=formatted.slice(0,9);manualTime.value=formatted.slice(-4);
+      manualAmount.value='';manualSign=1;previousSign=1;if(manualUnit==='difference')manualUnit=null;
+      updateManualControls();renderManual();
+      $('manualFeedback').textContent='결과를 기준 일시로 넣었습니다. 다음 계산할 기간을 입력해 주세요.';
+      manualAmount.focus();
+    }
+    for(const [kind,name] of [['manual','Manual'],['voice','Voice']]){
+      $('copy'+name).addEventListener('click',()=>copyResult(kind));
+      $('use'+name).addEventListener('click',()=>useResult(kind));
+    }
+    function syncCalendars(){
+      for(const [field,id] of [[manualDate,'startCalendar'],[endDate,'endCalendar']]){
+        const m=/^(\d{2})([A-Z]{3})(\d{4})$/.exec(field.value.toUpperCase());
+        try{if(!m)throw Error();kst(+m[3],MONTHS.indexOf(m[2])+1,+m[1],0,0);$(id).value=`${m[3]}-${pad(MONTHS.indexOf(m[2])+1)}-${m[1]}`;}
+        catch{$(id).value='';}
       }
-      let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
-      const hasMinutes=/\d+\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/i.test(clean);
-      const hasHours=/\d+\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/i.test(clean);
-      manualUnit=hasMinutes?'minutes':hasHours?'hours':'days';
-      manualAmount.value=String(limit/{minutes:1,hours:60,days:1440}[manualUnit]);
-      updateManualControls();
-      renderManual();
+    }
+    for(const [field,prefix] of [[manualDate,'start'],[endDate,'end']]){
+      $(prefix+'Today').addEventListener('click',()=>{field.value=display(Date.now()).slice(0,9);renderManual();});
+      $(prefix+'Calendar').addEventListener('click',()=>{try{$(prefix+'Calendar').showPicker?.();}catch{}});
+      $(prefix+'Calendar').addEventListener('change',()=>{
+        const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec($(prefix+'Calendar').value);
+        if(!m)return;
+        try{const ms=kst(+m[1],+m[2],+m[3],0,0);field.value=display(ms).slice(0,9);renderManual();}
+        catch{$('manualFeedback').textContent='달력에서 유효한 날짜를 선택해 주세요.';}
+      });
     }
     function parseManualDuration(amount,unit){
       const text=String(amount).trim();
@@ -206,96 +256,134 @@
       if(check.getUTCFullYear()!==y||check.getUTCMonth()!==m-1||check.getUTCDate()!==d)throw Error('해당 월에 존재하지 않는 날짜입니다.');
       return base-9*3600000;
     }
-    function currentKst(){const d=new Date(Date.now()+9*3600000);return {year:d.getUTCFullYear(),month:d.getUTCMonth()+1,day:d.getUTCDate()};}
+    function currentKst(reference=Date.now()){const d=new Date(reference+9*3600000);return {year:d.getUTCFullYear(),month:d.getUTCMonth()+1,day:d.getUTCDate()};}
+    function koreanNumber(word){
+      const n=word.replace(/\s/g,'');
+      const ones={한:1,하나:1,두:2,둘:2,세:3,셋:3,네:4,넷:4,다섯:5,여섯:6,일곱:7,여덟:8,아홉:9};
+      const tens={열:10,스물:20,스무:20,서른:30,마흔:40,쉰:50,예순:60,일흔:70,여든:80,아흔:90};
+      if(ones[n])return ones[n];
+      for(const [prefix,value] of Object.entries(tens))if(n.startsWith(prefix)){
+        const suffix=n.slice(prefix.length);if(!suffix)return value;if(ones[suffix])return value+ones[suffix];
+      }
+      if(!/^[영공일이삼사오육칠팔구십백천]+$/.test(n))return null;
+      const digits={영:0,공:0,일:1,이:2,삼:3,사:4,오:5,육:6,칠:7,팔:8,구:9},units={십:10,백:100,천:1000};
+      if(!/[십백천]/.test(n))return Number([...n].map(c=>digits[c]).join(''));
+      let total=0,digit=null,last=10000;
+      for(const c of n){
+        if(c in units){if(units[c]>=last||digit===0)return null;total+=(digit??1)*units[c];last=units[c];digit=null;}
+        else{if(digit!==null)return null;digit=digits[c];}
+      }
+      return total+(digit??0);
+    }
+    function speechText(raw){
+      let text=String(raw).toUpperCase().replace(/오늘\s*지금/g,'지금').replace(/(오전|오후)(?=[가-힣])/g,'$1 ');
+      text=text.replace(/(?<![가-힣])([영공일이삼사오육칠팔구십백천한하나두둘세셋네넷다섯여섯일곱여덟아홉열스물스무서른마흔쉰예순일흔여든아흔]+(?:\s+[영공일이삼사오육칠팔구십백천한하나두둘세셋네넷다섯여섯일곱여덟아홉열스물스무서른마흔쉰예순일흔여든아흔]+)*)(?=\s*(?:시간|년|월|일|시|분))/g,(all,n)=>{
+        const value=koreanNumber(n);return value===null?all:String(value);
+      });
+      return text.replace(/반\s*시간/g,'30분');
+    }
     function readClock(t){
-      const s=t.trim().replace(/^[,，\s]+/,'');let h,mi=0,matched='';
-      let m=s.match(/^(오전|오후|AM|PM)\s*(\d{1,2})\s*(?:시(?!간)|:)(?:\s*(\d{1,2})\s*분?)?/i);
-      if(m){h=+m[2];mi=+(m[3]||0);if(h<1||h>12)throw Error('오전·오후 시간은 1~12시로 입력해 주세요.');h=(h%12)+(m[1]==='오후'||/^PM$/i.test(m[1])?12:0);matched=m[0]}
-      else if((m=s.match(/^(\d{1,2})\s*시(?!간)\s*(?:(\d{1,2})\s*분?)?/))){h=+m[1];mi=+(m[2]||0);matched=m[0]}
-      else if((m=s.match(/^(\d{1,2}):(\d{2})\b/))){h=+m[1];mi=+m[2];matched=m[0]}
-      else if((m=s.match(/^(\d{4})(?!\d)/))){h=+m[1].slice(0,2);mi=+m[1].slice(2);matched=m[0]}
-      else if((m=s.match(/^(\d{1,2})\s*분/))){throw Error('날짜 뒤에 시각을 입력해 주세요. 예: 15시 30분')}
+      const s=t;let h,mi=0,matched='',m;
+      if((m=s.match(/^(?:(오전|오후|AM|PM)\s*)?(\d{1,2})\s*시(?!간)(?:\s*(?:(\d{1,2})\s*분?|반))?/i))){
+        h=+m[2];mi=/반$/.test(m[0])?30:+(m[3]||0);matched=m[0];
+        if(m[1]){if(h<1||h>12)throw Error('오전·오후 시간은 1~12시로 입력해 주세요.');h=h%12+(/^(오후|PM)$/i.test(m[1])?12:0);}
+      }else if((m=s.match(/^(?:(오전|오후|AM|PM)\s*)?(\d{1,2}):(\d{2})(?!\d)/i))){
+        h=+m[2];mi=+m[3];matched=m[0];
+        if(m[1]){if(h<1||h>12)throw Error('오전·오후 시간은 1~12시로 입력해 주세요.');h=h%12+(/^(오후|PM)$/i.test(m[1])?12:0);}
+      }else if((m=s.match(/^(\d{4})(?!\d)/))){h=+m[1].slice(0,2);mi=+m[1].slice(2);matched=m[0];}
       else throw Error('날짜 뒤에 시각을 입력해 주세요. 예: 15시 30분 또는 1530');
       if(/^\d/.test(s.slice(matched.length)))throw Error('시각의 숫자 자릿수를 확인해 주세요.');
       if(h>23||mi>59)throw Error('시간은 00~23시, 분은 00~59분으로 입력해 주세요.');
       return {h,mi,length:matched.length};
     }
-    function parseDates(raw){
-      const text=raw.toUpperCase().replace(/[.,]/g,' ');
-      const matches=[];
-      const now=currentKst();
+    function parseDates(raw,reference=Date.now(),allowPartial=false){
+      const text=speechText(raw),matches=[],now=currentKst(reference);
       const eng=new RegExp(`(^|[^A-Z0-9])(\\d{1,2})\\s*(${monthPattern})\\s*(\\d{4})(?=\\s|$|[^A-Z0-9])`,'g');
       let m;
-      while((m=eng.exec(text))){let start=m.index+m[1].length,end=eng.lastIndex;matches.push({start,end,d:+m[2],month:MONTHS.indexOf(m[3])+1,year:+m[4],explicitYear:true,explicitMonth:true})}
+      while((m=eng.exec(text)))matches.push({start:m.index+m[1].length,end:eng.lastIndex,d:+m[2],month:MONTHS.indexOf(m[3])+1,year:+m[4],explicitYear:true,explicitMonth:true});
       const kor=/(?:([12]\d{3})\s*년\s*)?(?:(\d{1,2})\s*월\s*)?(\d{1,2})\s*일/g;
       while((m=kor.exec(text))){
         if(matches.some(v=>m.index>=v.start&&m.index<v.end))continue;
-        // A bare "4일 뒤" or "4일 12시간" is a duration, not a second date.
         if(!m[1]&&!m[2]&&!/^\s*(?:오전|오후|AM|PM|\d{1,2}\s*시(?!간)|\d{1,2}:\d{2}|\d{4}(?!\d))/.test(text.slice(kor.lastIndex)))continue;
-        matches.push({start:m.index,end:kor.lastIndex,d:+m[3],month:m[2]?+m[2]:null,year:m[1]?+m[1]:null,explicitYear:!!m[1],explicitMonth:!!m[2]})
+        matches.push({start:m.index,end:kor.lastIndex,d:+m[3],month:m[2]?+m[2]:null,year:m[1]?+m[1]:null,explicitYear:!!m[1],explicitMonth:!!m[2]});
       }
-      const today=/오늘/g;
-      while((m=today.exec(text))){
-        if(matches.some(v=>m.index>=v.start&&m.index<v.end))continue;
-        matches.push({start:m.index,end:today.lastIndex,d:now.day,month:now.month,year:now.year,explicitYear:true,explicitMonth:true});
+      const relative=/오늘|어제|내일|모레|지금/g,offsets={어제:-1,오늘:0,내일:1,모레:2,지금:0};
+      while((m=relative.exec(text))){
+        const date=currentKst(reference+offsets[m[0]]*86400000);
+        matches.push({start:m.index,end:relative.lastIndex,d:date.day,month:date.month,year:date.year,explicitYear:true,explicitMonth:true,isNow:m[0]==='지금'});
       }
       matches.sort((a,b)=>a.start-b.start);
-      if(!matches.length)throw Error('시작 날짜를 찾지 못했습니다. “오늘 15시 30분부터 40시간”처럼 말씀해 주세요.');
+      if(!matches.length)throw Error('시작 날짜를 찾지 못했습니다. “오늘 15시부터 2시간”처럼 말씀해 주세요.');
       if(matches.length>2)throw Error('날짜가 세 개 이상 인식되었습니다. 시작과 종료 두 시점만 입력해 주세요.');
       let prev=null;
       for(const item of matches){
-        const after=text.slice(item.end).match(/^\s*/)[0].length;
-        const clock=readClock(text.slice(item.end+after));item.end+=after+clock.length;
-        item.month=item.month??(prev?prev.month:now.month);
-        item.year=item.year??(prev?prev.year:now.year);
+        item.month=item.month??(prev?prev.month:now.month);item.year=item.year??(prev?prev.year:now.year);
         if(prev&&!item.explicitYear&&item.explicitMonth&&item.month<prev.month)item.year++;
-        item.ms=kst(item.year,item.month,item.d,clock.h,clock.mi);prev=item;
+        if(item.isNow)item.ms=Math.floor(reference/60000)*60000;
+        else{
+          const after=text.slice(item.end).match(/^[\s,，]*/)[0].length,tail=text.slice(item.end+after);
+          if(allowPartial&&matches.length===1&&/^(?:날짜)?[.!?。]*$/.test(tail)){
+            kst(item.year,item.month,item.d,0,0);item.ms=null;item.end=text.length;
+          }else{const clock=readClock(tail);item.end+=after+clock.length;item.ms=kst(item.year,item.month,item.d,clock.h,clock.mi);}
+        }
+        prev=item;
       }
       return matches;
     }
+    function withoutDates(text,dates){let clean=text;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);return clean;}
     function parseDuration(raw,dates){
-      let clean=raw;for(const d of [...dates].reverse())clean=clean.slice(0,d.start)+' '.repeat(d.end-d.start)+clean.slice(d.end);
-      // Reject malformed numeric tokens instead of calculating their integer suffix.
+      const clean=withoutDates(speechText(raw),dates);
       const tokens=clean.matchAll(/([+\-−]?\s*(?:\d[\d.,eE+\-−]*|[.,]\d+))\s*(?:시간|분|일|HOURS?|HRS?|HR|MINUTES?|MINS?|MIN|DAYS?|[DHM])(?![A-Z])/gi);
-      for(const token of tokens){
-        if(!/^\d+$/.test(token[1].trim()))throw Error('기간은 부호나 소수점 없이 정수로 입력해 주세요.');
-      }
+      for(const token of tokens)if(!/^\d+$/.test(token[1].trim()))throw Error('기간은 부호나 소수점 없이 정수로 입력해 주세요. 빼기는 “2시간 빼기”처럼 말씀해 주세요.');
       const days=[...clean.matchAll(/(\d+)\s*(?:일|DAYS?|D)(?![A-Z])/gi)];
-      const hours=[...clean.matchAll(/(\d+)\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])/gi)];
+      const hours=[...clean.matchAll(/(\d+)\s*(?:시간|HOURS?|HRS?|HR|H)(?![A-Z])(?:\s*반)?/gi)];
       const minutes=[...clean.matchAll(/(\d+)\s*(?:분|MINUTES?|MINS?|MIN|M)(?![A-Z])/gi)];
       if(days.length>1||hours.length>1||minutes.length>1)throw Error('같은 기간 단위는 한 번만 입력해 주세요. 예: 4일 12시간 30분');
-      if(!days.length&&!hours.length&&!minutes.length)return null;
-      let total=(days.length?+days[0][1]*1440:0)+(hours.length?+hours[0][1]*60:0)+(minutes.length?+minutes[0][1]:0);
-      if(!Number.isSafeInteger(total)||total<=0||total>5256000)throw Error('제한시간은 1분 이상, 10년 이하로 입력해 주세요.');
+      const used=[...days,...hours,...minutes].sort((a,b)=>b.index-a.index);
+      let rest=clean;for(const token of used)rest=rest.slice(0,token.index)+' '.repeat(token[0].length)+rest.slice(token.index+token[0].length);
+      rest=rest.replace(/(?:계산해\s*주세요|계산해\s*줘|계산|더해\s*주세요|더해\s*줘|더하기|더해|빼\s*주세요|빼\s*줘|빼기|빼|기준으로|기준|부터|까지|에서|이전에?|이후에?|전에?|후에?|뒤에?|BEFORE|AFTER|ADD|SUBTRACT)/gi,'').replace(/[\s.,!?，。]/g,'');
+      if(rest)throw Error('해석하지 못한 표현이 있습니다. 날짜·시각과 기간을 확인해 주세요. 예: 오늘 오후 세 시 반에서 두 시간 빼기');
+      if(!used.length)return null;
+      const total=(days.length?+days[0][1]*1440:0)+(hours.length?+hours[0][1]*60+(/반$/.test(hours[0][0])?30:0):0)+(minutes.length?+minutes[0][1]:0);
+      if(!Number.isSafeInteger(total)||total<=0||total>5256000)throw Error('계산 기간은 1분 이상, 10년 이하로 입력해 주세요.');
       return total;
     }
-    function calculate(raw){
-      const dates=parseDates(raw),limit=parseDuration(raw,dates),start=dates[0],end=dates[1];
-      if(!end&&limit===null)throw Error('제한시간이나 종료 시각을 말씀해 주세요. 예: 40시간 또는 28일 18시 15분까지');
-      if(end&&end.ms<start.ms)throw Error('종료 시각이 시작 시각보다 빠릅니다. 연도·월·일을 확인해 주세요.');
+    function analyzeVoice(raw){
+      const text=speechText(raw),dates=parseDates(text,Date.now(),true),limit=parseDuration(text,dates),clean=withoutDates(text,dates);
+      const minus=/(?:빼|이?전|BEFORE|SUBTRACT)/i.test(clean),plus=/(?:더|이?후|뒤|AFTER|ADD)/i.test(clean);
+      if(minus&&plus)throw Error('더하기와 빼기가 함께 인식되었습니다. 한 번에 한 가지 계산을 말씀해 주세요.');
+      if(dates.length===2){
+        if(minus)throw Error('두 날짜는 경과시간으로 비교합니다. “시작부터 종료까지”로 말씀해 주세요.');
+        if(dates[1].ms<dates[0].ms)throw Error('종료 시각이 시작 시각보다 빠릅니다. 연도·월·일을 확인해 주세요.');
+      }
+      return {text,dates,limit,sign:minus?-1:1};
+    }
+    function calculate(raw,parsed=analyzeVoice(raw)){
+      const {dates,limit,sign}=parsed,start=dates[0],end=dates[1];
+      if(start.ms===null)throw Error('시각과 계산할 기간을 말씀하거나 아래에 입력해 주세요. 예: 오늘 15시부터 2시간');
+      if(!end&&limit===null)throw Error('날짜와 시각을 아래에 채웠습니다. 계산할 기간이나 종료 시각을 입력해 주세요.');
       let html=section('START / 시작',display(start.ms));
       if(end)html+=section('END / 종료',display(end.ms));
-      if(limit!==null)html+=section('LIMIT / 제한',durationText(limit));
+      if(limit!==null)html+=section(sign<0?'SUBTRACT / 빼기':'LIMIT / 기간',durationText(limit));
       if(end){const elapsed=(end.ms-start.ms)/60000;
-        html+=banner('ELAPSED / 경과',durationText(elapsed),`총 ${elapsed.toLocaleString('ko-KR')}분`);
-        if(limit!==null){const left=limit-elapsed;html+=banner(left<0?'EXCEEDED / 제한 초과':left===0?'AT LIMIT / 제한 도달':'REMAINING / 잔여',durationText(left),left<0?'제한 시각을 지났습니다.':left===0?'제한 시각과 일치합니다.':'제한시간까지 남았습니다.',left<0?'bad':left===0?'warn':'')}
+        html+=banner('ELAPSED / 경과 · HHMM',elapsedHHMM(elapsed),`${durationText(elapsed)} · 총 ${elapsed.toLocaleString('ko-KR')}분`);
+        if(limit!==null){const left=limit-elapsed;html+=banner(left<0?'EXCEEDED / 제한 초과':left===0?'AT LIMIT / 제한 도달':'REMAINING / 잔여',durationText(left),left<0?'제한 시각을 지났습니다.':left===0?'제한 시각과 일치합니다.':'제한시간까지 남았습니다.',left<0?'bad':left===0?'warn':'');}
       }
-      if(limit!==null)html+=banner('EXPIRES / 마지막 허용 시각',display(start.ms+limit*60000),'이 시각을 넘기면 제한시간 초과입니다.');
+      if(limit!==null)html+=banner(sign<0?'RESULT / 계산 결과':'EXPIRES / 마지막 허용 시각',display(start.ms+sign*limit*60000),`${display(start.ms)} ${sign<0?'−':'+'} ${durationText(limit)}`);
       if(dates.some(d=>!d.explicitYear||!d.explicitMonth))html+='<p class="note">※ 생략된 연도·월은 한국 시간의 현재 연월 또는 앞선 날짜를 기준으로 해석했습니다. START/END를 확인해 주세요.</p>';
       return html;
     }
-    function render(){const raw=input.value.trim();if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return}
-      if(/^오늘\s*(?:날짜)?[.!。]?$/.test(raw)){
-        const today=currentKst();
-        manualDate.value=`${pad(today.day)}${MONTHS[today.month-1]}${today.year}`;
-        manualTime.value='';
-        renderManual();
-        details.innerHTML='<p class="error">시각과 계산할 기간을 말씀하거나 아래에 입력해 주세요. 예: 오늘 15시부터 40시간</p>';
-        return;
-      }
-      try{details.innerHTML=calculate(raw);syncManualFromVoice(raw)}catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`}}
+    function render(){
+      setResult('voice',null);const raw=input.value.trim();
+      if(!raw){details.innerHTML='<p class="error">인식된 문장을 입력하거나 수정해 주세요.</p>';return;}
+      try{
+        const parsed=analyzeVoice(raw);syncManualFromVoice(raw,parsed);details.innerHTML=calculate(raw,parsed);
+        if(parsed.limit!==null){const ms=parsed.dates[0].ms+parsed.sign*parsed.limit*60000;setResult('voice',{text:display(ms),ms});}
+        else setResult('voice',{text:elapsedHHMM((parsed.dates[1].ms-parsed.dates[0].ms)/60000)});
+      }catch(e){details.innerHTML=`<p class="error">⚠ ${e.message}</p>`;}
+    }
     function show(textValue){intro.hidden=true;output.hidden=false;input.value=textValue;render();window.scrollTo(0,0)}
-    function resetMic(){mic.classList.remove('listening');mic.setAttribute('aria-label','음성 입력 시작');hint.innerHTML='버튼을 누르고 시간 계산을 말씀해 주세요.<br>“9월 27일 15시 30분부터 40시간”'}
+    function resetMic(){mic.classList.remove('listening');mic.setAttribute('aria-label','음성 입력 시작');hint.innerHTML='버튼을 누르고 시간 계산을 말씀해 주세요.<br>“오늘 오후 세 시 반부터 두 시간”'}
     function fallback(message){resetMic();show(input.value||'');details.insertAdjacentHTML('afterbegin',`<p class="error">⚠ ${message}</p>`);input.focus()}
     function startListening(){
       if(!Recognition){fallback('이 브라우저에서는 음성 인식이 제공되지 않습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.');return}
@@ -333,8 +421,30 @@
     }
     mic.addEventListener('click',startListening);
     $('again').addEventListener('click',()=>{intro.hidden=false;output.hidden=true;status.textContent='';startListening()});
-    $('clear').addEventListener('click',()=>{if(recognition){try{recognition.abort()}catch{}recognition=null}clearTimeout(listenTimer);clearTimeout(endTimer);input.value='';details.innerHTML='';output.hidden=true;intro.hidden=false;status.textContent='';resetMic()});
+    $('clear').addEventListener('click',()=>{if(recognition){try{recognition.abort()}catch{}recognition=null}clearTimeout(listenTimer);clearTimeout(endTimer);input.value='';details.innerHTML='';setResult('voice',null);output.hidden=true;intro.hidden=false;status.textContent='';resetMic()});
     input.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(render,130)});
+    const draftKey='time-limit:update-draft:'+location.pathname;
+    const draftFields=[manualDate,manualTime,manualAmount,endDate,endTime,input];
+    window.addEventListener('time-limit:before-update',event=>{
+      try{
+        sessionStorage.setItem(draftKey,JSON.stringify({schema:1,savedAt:Date.now(),values:draftFields.map(f=>f.value),unit:manualUnit,sign:manualSign,previousSign,voiceVisible:!output.hidden}));
+      }catch{event.preventDefault();}
+    });
+    function restoreUpdateDraft(){
+      try{
+        const raw=sessionStorage.getItem(draftKey);if(!raw)return;
+        sessionStorage.removeItem(draftKey);
+        const draft=JSON.parse(raw),age=Date.now()-draft.savedAt;
+        if(draft.schema!==1||!Number.isFinite(age)||age<0||age>30*60000||!Array.isArray(draft.values)||draft.values.length!==draftFields.length||!draft.values.every(v=>typeof v==='string'&&v.length<=5000))return;
+        if(![null,'minutes','hours','days','hhmm','difference'].includes(draft.unit)||![1,-1].includes(draft.sign)||![1,-1].includes(draft.previousSign))return;
+        draftFields.forEach((f,i)=>{f.value=draft.values[i];});manualUnit=draft.unit;manualSign=draft.sign;previousSign=draft.previousSign;
+        output.hidden=!draft.voiceVisible;intro.hidden=!!draft.voiceVisible;
+        // Relative words such as "지금" must keep their pre-update resolved date/time.
+        if(draft.voiceVisible)details.textContent='업데이트 전 입력을 복원했습니다. 아래 수동 입력칸에서 계산을 이어가세요.';
+        updateManualControls();renderManual();$('manualFeedback').textContent='업데이트 전 입력을 복원했습니다.';
+      }catch{/* A normal new session keeps today's date and an empty time. */}
+    }
+    updateManualControls();syncCalendars();restoreUpdateDraft();
   })();
   </script>
 </body>

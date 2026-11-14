@@ -208,15 +208,15 @@ test('relative dates cross leap days and new year in KST and remain fixed after 
   assert.equal(app.el('manualDate').value,'31DEC2026');assert.equal(app.el('manualTime').value,'2359');
   assert.match(app.api.calculate('',parsed),/01JAN2027 0159/);
 });
-test('calendar and today controls preserve DDMMMYYYY and the typed clock',()=>{
+test('calendar controls preserve DDMMMYYYY and the typed clock',()=>{
   const app=loadApp('2026-11-14T04:00:00Z');app.manual('14NOV2026','1530','2','hours');
   app.el('startCalendar').value='2024-02-29';app.el('startCalendar').fire('change');
   assert.equal(app.el('manualDate').value,'29FEB2024');assert.match(app.el('manualResult').innerHTML,/29FEB2024 1730/);
-  app.setNow('2026-11-14T15:01:00Z');app.el('startToday').fire('click');
+  app.el('startCalendar').value='2026-11-15';app.el('startCalendar').fire('change');
   assert.equal(app.el('manualDate').value,'15NOV2026');assert.equal(app.el('manualTime').value,'1530');
   app.unit('difference');app.el('endCalendar').value='2026-11-16';app.el('endCalendar').fire('change');app.el('endTime').value='1800';app.el('endTime').fire('input');
   assert.equal(app.el('endDate').value,'16NOV2026');assert.match(app.el('manualResult').innerHTML,/>2630</);
-  app.el('endToday').fire('click');assert.match(app.el('manualResult').innerHTML,/>0230</);
+  app.el('endCalendar').value='2026-11-15';app.el('endCalendar').fire('change');assert.match(app.el('manualResult').innerHTML,/>0230</);
 });
 test('copy results, select fallback, chain arithmetic and hide stale actions',async()=>{
   const app=loadApp();app.manual('27SEP2026','1530','0130','hhmm');

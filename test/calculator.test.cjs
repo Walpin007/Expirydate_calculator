@@ -298,3 +298,21 @@ test('voice remaining and exceeded results explain the correct subtraction order
   assert.match(a.calculate(raw+'38시간 40분'),/제한 38시간 40분 − 경과 38시간 40분 = 0분 남음/);
   assert.match(a.calculate(raw+'38시간'),/경과 38시간 40분 − 제한 38시간 = 40분 초과/);
 });
+
+test('voice retry isolates late events and recovers after errors and startup timeout',()=>{
+  const sessions=[];
+  class Recognition {constructor(){sessions.push(this);}start(){this.started=true;}stop(){this.stopped=true;}abort(){this.aborted=true;}}
+  const app=loadApp(undefined,{Recognition});
+  app.el('mic').fire('click');const first=sessions[0];first.onstart();
+  first.onerror({error:'network'});
+  app.el('again').fire('click');const second=sessions[1];assert.ok(second.started);assert.ok(first.aborted);
+  second.onstart();const pending=app.timers.size;
+  first.onend();first.onerror({error:'network'});first.onresult({results:[[{transcript:'잘못된 이전 결과'}]]});
+  assert.equal(app.timers.size,pending);
+  second.onresult({results:[[{transcript:'오늘 15시부터 2시간'}]]});second.onend();
+  assert.equal(app.el('input').value,'오늘 15시부터 2시간');assert.equal(app.timers.size,0);
+  app.el('again').fire('click');const third=sessions[2];
+  const startup=[...app.timers.values()].find(t=>t.ms===10000);startup.fn();assert.ok(third.aborted);
+  app.el('again').fire('click');assert.ok(sessions[3].started);
+  app.el('clear').fire('click');assert.equal(app.timers.size,0);
+});

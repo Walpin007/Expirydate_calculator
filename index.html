@@ -79,7 +79,7 @@
         <p id="manualFeedback" class="feedback" role="status"></p><input id="manualCopyValue" class="copy-value" readonly hidden aria-label="복사할 수동 계산 결과">
       </section>
     </main>
-    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.11 · PWA</span></footer>
+    <footer class="foot">DDMMMYYYY hhmm · 모든 시간은 한국 시간 기준<br>음성 인식은 온라인 연결이 필요할 수 있습니다.<br><span id="pwaStatus" role="status">PWA 준비 중…</span><br><button id="pwaUpdate" type="button" class="action alt" hidden>새 버전 적용</button><span class="version">v0.1.12 · PWA</span></footer>
   </div>
   <script>
   (() => {
@@ -433,38 +433,44 @@
       if(recognition){recognition.requestStop();return}
       let r;try{r=new Recognition();r.lang='ko-KR';r.continuous=false;r.interimResults=false;r.maxAlternatives=1;recognition=r;
         let transcript='',error='',stopping=false,finished=false;
+        let listenTimer,endTimer,startTimer;
+        const active=()=>recognition===r&&!finished;
+        r.cancel=()=>{finished=true;clearTimeout(listenTimer);clearTimeout(endTimer);clearTimeout(startTimer);if(recognition===r)recognition=null;try{r.abort()}catch{}resetMic();};
         const finish=()=>{
-          if(finished)return;finished=true;clearTimeout(listenTimer);clearTimeout(endTimer);
+          if(!active())return;finished=true;clearTimeout(listenTimer);clearTimeout(endTimer);clearTimeout(startTimer);
           if(recognition!==r)return;recognition=null;resetMic();
           if(transcript){status.textContent='';show(transcript)}
           else{status.textContent=error||'인식된 말이 없습니다. 버튼을 눌러 다시 시도해 주세요.'}
         };
         r.requestStop=()=>{
-          if(stopping||finished)return;stopping=true;clearTimeout(listenTimer);status.textContent='음성 인식을 마치는 중입니다…';
+          if(!active()||stopping)return;stopping=true;clearTimeout(listenTimer);status.textContent='음성 인식을 마치는 중입니다…';
           try{r.stop()}catch{try{r.abort()}catch{}finish();return}
           endTimer=setTimeout(()=>{if(finished)return;try{r.abort()}catch{}finish()},2000);
         };
         r.onstart=()=>{
-          if(recognition!==r)return;
+          if(!active()||stopping)return;clearTimeout(startTimer);
           mic.classList.add('listening');mic.setAttribute('aria-label','음성 입력 종료');
           hint.textContent='듣는 중입니다. 말이 끝나면 자동으로 종료됩니다.';
           status.textContent='버튼을 다시 누르면 바로 종료합니다.';
           listenTimer=setTimeout(()=>{error='25초가 지나 인식을 종료했습니다. 다시 시도해 주세요.';r.requestStop()},25000);
         };
         r.onspeechend=()=>r.requestStop();
-        r.onresult=e=>{transcript=e.results?.[0]?.[0]?.transcript?.trim()||transcript;r.requestStop()};
+        r.onresult=e=>{if(!active())return;transcript=e.results?.[0]?.[0]?.transcript?.trim()||transcript;r.requestStop()};
         r.onerror=e=>{
+          if(!active())return;
           error=e.error==='not-allowed'||e.error==='service-not-allowed'?'마이크 권한을 확인해 주세요.':e.error==='no-speech'?'음성이 들리지 않았습니다.':e.error==='network'?'음성 인식 연결에 실패했습니다.':'음성 인식을 사용할 수 없습니다.';
           clearTimeout(listenTimer);
-          if(!stopping){try{r.abort()}catch{}endTimer=setTimeout(finish,2000)}
+          clearTimeout(startTimer);clearTimeout(endTimer);stopping=true;
+          endTimer=setTimeout(finish,2000);try{r.abort()}catch{finish()}
         };
         r.onend=finish;
+        startTimer=setTimeout(()=>{if(!active())return;error='음성 인식 시작이 지연되었습니다. 다시 시도해 주세요.';try{r.abort()}catch{}finish()},10000);
         r.start();
-      }catch{if(recognition===r)recognition=null;clearTimeout(listenTimer);clearTimeout(endTimer);fallback('음성 인식을 시작할 수 없습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.')}
+      }catch{r?.cancel?.();if(recognition===r)recognition=null;clearTimeout(listenTimer);clearTimeout(endTimer);fallback('음성 인식을 시작할 수 없습니다. 키보드 마이크 또는 직접 입력을 사용해 주세요.')}
     }
     mic.addEventListener('click',startListening);
-    $('again').addEventListener('click',()=>{intro.hidden=false;output.hidden=true;status.textContent='';startListening()});
-    $('clear').addEventListener('click',()=>{if(recognition){try{recognition.abort()}catch{}recognition=null}clearTimeout(listenTimer);clearTimeout(endTimer);input.value='';details.innerHTML='';setResult('voice',null);output.hidden=true;intro.hidden=false;status.textContent='';resetMic()});
+    $('again').addEventListener('click',()=>{recognition?.cancel?.();intro.hidden=false;output.hidden=true;status.textContent='';startListening()});
+    $('clear').addEventListener('click',()=>{recognition?.cancel?.();clearTimeout(listenTimer);clearTimeout(endTimer);input.value='';details.innerHTML='';setResult('voice',null);output.hidden=true;intro.hidden=false;status.textContent='';resetMic()});
     input.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(render,130)});
     const draftKey='time-limit:update-draft:'+location.pathname;
     const draftFields=[manualDate,manualTime,manualAmount,endDate,endTime,input];

@@ -21,6 +21,7 @@ function loadApp(now = '2026-09-27T15:30:00Z', options = {}) {
     .map(m => element({ dataset: { [name]: m[1] } }));
   const signs = buttons('sign'), units = buttons('unit');
   class Clock extends Date { static now() { return Date.parse(now); } }
+  const timers=new Map();let timerId=0;
   const events={}, storage=options.storage||new Map(), copied=[];
   const emit=(type)=>{const event={type,defaultPrevented:false,preventDefault(){this.defaultPrevented=true;}};for(const fn of events[type]||[])fn(event);return event;};
   const context = vm.createContext({ Date: Clock, console,
@@ -29,7 +30,7 @@ function loadApp(now = '2026-09-27T15:30:00Z', options = {}) {
     navigator:{clipboard:{async writeText(text){if(options.clipboardBlocked)throw Error('denied');copied.push(text);}}},
     document: { getElementById(id) { if (!elements.has(id)) throw Error('Missing DOM id: ' + id); return elements.get(id); },
       querySelectorAll(q) { return q === '[data-sign]' ? signs : q === '[data-unit]' ? units : []; } },
-    window: { scrollTo() {}, addEventListener(k,fn){(events[k]||=[]).push(fn);} }, setTimeout() { return 1; }, clearTimeout() {} });
+    window: { SpeechRecognition:options.Recognition, scrollTo() {}, addEventListener(k,fn){(events[k]||=[]).push(fn);} }, setTimeout(fn,ms) { timers.set(++timerId,{fn,ms});return timerId; }, clearTimeout(id) {timers.delete(id);} });
   const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]).filter(s => s.trim());
   if (scripts.length !== 1) throw Error('Expected one inline application script; update the harness if structure changes.');
   const suffix = '  })();';
@@ -37,7 +38,7 @@ function loadApp(now = '2026-09-27T15:30:00Z', options = {}) {
   // Instrument only the in-memory copy. No exports/hooks/dependencies ship to the browser.
   const script = scripts[0].replace(suffix, `globalThis.api = { kst, display, durationText, readClock, currentKst, parseDates, parseDuration, calculate, syncManualFromVoice, renderManual, render, analyzeVoice, buildCalculationSteps, ${scripts[0].includes('function parseManualDuration(') ? 'parseManualDuration,' : ''} };\n${suffix}`);
   vm.runInContext(script, context, { filename: 'index.html:inline' });
-  return { api: context.api, storage, copied, emit, setNow(value){now=value;}, el: id => elements.get(id), signs, units,
+  return { timers, api: context.api, storage, copied, emit, setNow(value){now=value;}, el: id => elements.get(id), signs, units,
     unit(name) { const b = units.find(b => b.dataset.unit === name); if (!b) throw Error('Missing unit ' + name); b.fire('click'); },
     sign(n) { signs.find(b => b.dataset.sign === String(n)).fire('click'); },
     manual(date, time, amount, unit, sign = 1) {

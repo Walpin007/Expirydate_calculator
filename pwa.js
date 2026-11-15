@@ -2,7 +2,7 @@
 (() => {
   const status = document.getElementById('pwaStatus');
   const updateButton = document.getElementById('pwaUpdate');
-  let registration, ready = false, applying = false, reloadReady = false;
+  let registration, ready = false, applying = false, reloadReady = false, updateTimer;
   const showStatus = () => {
     status.textContent = ready
       ? (navigator.onLine ? '오프라인 계산 준비 완료' : '오프라인 · 수동 계산 가능')
@@ -31,16 +31,23 @@
     }
     return true;
   };
+  const retryUpdate = () => {
+    clearTimeout(updateTimer);updateButton.disabled = false;updateButton.textContent = '새 버전 적용';
+    status.textContent = '업데이트 완료를 확인하지 못했습니다. 다시 적용해 주세요.';
+  };
   updateButton.addEventListener('click', () => {
     if (reloadReady) { if (preserveInput()) location.reload(); return; }
     if (!registration?.waiting || !preserveInput()) return;
     applying = true;
     updateButton.disabled = true;
     updateButton.textContent = '업데이트 적용 중…';
-    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    clearTimeout(updateTimer);updateTimer = setTimeout(retryUpdate, 10000);
+    try { registration.waiting.postMessage({ type: 'SKIP_WAITING' }); }
+    catch { applying = false;retryUpdate(); }
   });
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!applying) return;
+    clearTimeout(updateTimer);
     if (preserveInput()) location.reload();
     else { applying = false; reloadReady = true; updateButton.disabled = false; updateButton.textContent = '입력 보존 후 다시 열기'; }
   });

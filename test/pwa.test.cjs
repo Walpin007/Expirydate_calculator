@@ -8,7 +8,7 @@ const { ROOT, element } = require('./harness.cjs');
 const BASE='https://example.test/Expirydate_calculator/';
 function worker() {
   const handlers={}, stores=new Map(), deleted=[];let claimed=0,skipped=0;
-  const cacheName='time-limit:'+BASE+':v0.1.12';
+  const cacheName='time-limit:'+BASE+':v0.1.13';
   const cache={ entries:new Map(), async addAll(requests){this.requests=requests;},
     async put(key,res){this.entries.set(key,res);}, async match(key){return this.entries.get(key)?.clone();} };
   stores.set(cacheName,cache);
@@ -53,18 +53,18 @@ test('service worker ignores non-GET, external and unrelated requests',async()=>
 test('manifest identity, relative paths and release version remain consistent',()=>{
   const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'manifest.webmanifest'),'utf8'));
   assert.equal(manifest.id,'./');assert.equal(manifest.scope,'./');assert.equal(manifest.start_url,'./');assert.equal(manifest.display,'standalone');
-  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.12 · PWA/);
-  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.12'/);
+  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');assert.match(html,/v0\.1\.13 · PWA/);
+  assert.match(fs.readFileSync(path.join(ROOT,'sw.js'),'utf8'),/VERSION = 'v0\.1\.13'/);
   assert.match(html,/<script src="\.\/pwa.js" defer>/);
 });
 function pwa(secure=true) {
-  const status=element(),button=element({hidden:true}),events={},windowEvents={},messages=[];let reloads=0,updates=0,registered;
+  const status=element(),button=element({hidden:true}),events={},windowEvents={},messages=[];let reloads=0,updates=0,registered;const timers=new Map();let timerId=0;
   const reg={waiting:{postMessage(m){messages.push(m);}},addEventListener(){},update(){updates++;return Promise.resolve();}};
   const sw={controller:{},ready:Promise.resolve(),addEventListener(k,fn){events[k]=fn;},register(url,options){registered={url,options};return Promise.resolve(reg);}};
-  const context=vm.createContext({CustomEvent:class {constructor(type){this.type=type;this.defaultPrevented=false;}preventDefault(){this.defaultPrevented=true;}},document:{getElementById:id=>id==='pwaStatus'?status:button,addEventListener(k,fn){events[k]=fn;},visibilityState:'visible'},
+  const context=vm.createContext({setTimeout(fn){timers.set(++timerId,fn);return timerId;},clearTimeout(id){timers.delete(id);},CustomEvent:class {constructor(type){this.type=type;this.defaultPrevented=false;}preventDefault(){this.defaultPrevented=true;}},document:{getElementById:id=>id==='pwaStatus'?status:button,addEventListener(k,fn){events[k]=fn;},visibilityState:'visible'},
     navigator:{serviceWorker:sw,onLine:true},window:{isSecureContext:secure,dispatchEvent(event){windowEvents[event.type]?.(event);return !event.defaultPrevented;},addEventListener(k,fn){windowEvents[k]=fn;}},location:{protocol:secure?'https:':'file:',reload(){reloads++;}}});
   vm.runInContext(fs.readFileSync(path.join(ROOT,'pwa.js'),'utf8'),context);
-  return {status,button,events,windowEvents,messages,context,get registered(){return registered;},get reloads(){return reloads;},get updates(){return updates;}};
+  return {reg,timers,status,button,events,windowEvents,messages,context,get registered(){return registered;},get reloads(){return reloads;},get updates(){return updates;}};
 }
 test('PWA registration, ready/offline status and deliberate update reload',async()=>{
   const p=pwa();await new Promise(resolve=>setImmediate(resolve));
@@ -91,4 +91,22 @@ test('PWA can retry reload when the second draft save fails',async()=>{
   p.button.fire('click');p.windowEvents['time-limit:before-update']=event=>event.preventDefault();p.events.controllerchange();
   assert.equal(p.reloads,0);assert.equal(p.button.disabled,false);assert.match(p.button.textContent,/다시 열기/);
   p.windowEvents['time-limit:before-update']=()=>{};p.button.fire('click');assert.equal(p.reloads,1);
+});
+
+for(const failure of ['open','put','match'])test(`cache ${failure} failure does not block a usable response`,async()=>{
+  const w=worker();
+  if(failure==='open')w.context.caches.open=async()=>{throw Error('storage denied');};
+  if(failure==='put')w.cache.put=async()=>{throw Error('quota');};
+  if(failure==='match'){w.context.fetch=async()=>{throw Error('offline');};w.cache.match=async()=>{throw Error('read denied');};}
+  const response=await w.request();assert.equal(response.status,failure==='match'?503:200);
+});
+test('PWA failed update message restores the button for retry',async()=>{
+  const p=pwa();await new Promise(resolve=>setImmediate(resolve));
+  p.reg.waiting.postMessage=()=>{throw Error('redundant worker');};await p.button.fire('click');
+  assert.equal(p.button.disabled,false);assert.match(p.status.textContent,/다시/);
+});
+test('PWA missing controllerchange times out and can still complete a late update',async()=>{
+  const p=pwa();await new Promise(resolve=>setImmediate(resolve));await p.button.fire('click');
+  assert.equal(p.timers.size,1);for(const fn of [...p.timers.values()])fn();
+  assert.equal(p.button.disabled,false);p.events.controllerchange();assert.equal(p.reloads,1);assert.equal(p.timers.size,0);
 });
